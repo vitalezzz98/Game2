@@ -64,6 +64,9 @@ class Game:
         self.player_moves = []
         for img in PLAYER_MOVE_IMG:
             self.player_moves.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
+        self.player_shoots = []
+        for img in PLAYER_SHOOT_IMG:
+            self.player_shoots.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
         self.gun_flashes = []
         for img in MUZZLE_FLASHES:
             self.gun_flashes.append(pg.image.load(path.join(img_folder, img)).convert_alpha())

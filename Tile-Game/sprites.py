@@ -95,7 +95,7 @@ class Player(pg.sprite.Sprite):
                 dir = vec(1, 0).rotate(self.game.mouse.angle + 90)
                 pos = self.pos + BARREL_OFFSET.rotate(self.game.mouse.angle + 90)
                 Bullet(self.game, pos, dir)
-                self.vel = vec(-KICKBACK, 0).rotate(self.game.mouse.angle + 90)
+                #self.vel = vec(-KICKBACK, 0).rotate(self.game.mouse.angle + 90)
                 MuzzleFlash(self.game, pos)
                 choice(self.game.weapons_sounds['gun']).play()
 
@@ -105,10 +105,21 @@ class Player(pg.sprite.Sprite):
             self.health = PLAYER_HEALTH
 
     def update(self):
+        mouse = pg.mouse.get_pressed()
         if self.vel == (0, 0):
             self.standing = True
         else:
             self.standing = False
+        if self.vel != (0, 0):
+            self.moving = True
+        else:
+            self.moving = False
+        if mouse[0]:
+            self.shooting = True
+            self.standing = False
+            self.moving = False
+        else:
+            self.shooting = False
         now = pg.time.get_ticks()
         if self.standing:
             if now - self.last_update > 50:
@@ -116,11 +127,17 @@ class Player(pg.sprite.Sprite):
                 self.current_frame = (self.current_frame + 1) % len(self.game.player_idles)
                 self.image = pg.transform.scale(self.game.player_idles[self.current_frame], (64, 55))
                 self.image_copy = pg.transform.rotate(self.image, 270)
-        if not self.standing:
+        if self.moving:
             if now - self.last_update > 20:
                 self.last_update = now
                 self.current_frame = (self.current_frame + 1) % len(self.game.player_moves)
                 self.image = pg.transform.scale(self.game.player_moves[self.current_frame], (64, 55))
+                self.image_copy = pg.transform.rotate(self.image, 270)
+        if self.shooting:
+            if now - self.last_update > 150:
+                self.last_update = now
+                self.current_frame = (self.current_frame + 1) % len(self.game.player_shoots)
+                self.image = pg.transform.scale(self.game.player_shoots[self.current_frame], (64, 55))
                 self.image_copy = pg.transform.rotate(self.image, 270)
         self.get_keys()
         self.image = pg.transform.rotate(self.image_copy, int(-self.game.mouse.angle))
@@ -230,7 +247,7 @@ class MuzzleFlash(pg.sprite.Sprite):
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        size = randint(20, 50)
+        size = randint(10, 20)
         self.image = pg.transform.scale(choice(game.gun_flashes), (size, size))
         self.rect = self.image.get_rect()
         self.hit_rect = self.rect
