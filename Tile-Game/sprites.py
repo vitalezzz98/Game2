@@ -35,20 +35,20 @@ class Mouse(pg.sprite.Sprite):
         self.image = self.image.convert_alpha()
         self.rect = self.image.get_rect()
         self.game = game
-        self.mousex, self.mousey = pg.mouse.get_pos()
-        self.x = self.mousex - game.player.pos.x
-        self.y = self.mousey - game.player.pos.y
+        self.pos = self.game.camera.reverse(pg.mouse.get_pos())
+        self.x = self.pos[0] - self.game.player.pos.x
+        self.y = self.pos[1] - self.game.player.pos.y
         self.angle = math.atan2(self.x, self.y)
         self.angle = (180 / math.pi) * (-self.angle)
         self.hit_rect = self.rect
 
     def update(self):
-        self.mousex, self.mousey = pg.mouse.get_pos()
-        self.x = self.mousex - self.game.player.pos.x
-        self.y = self.mousey - self.game.player.pos.y
+        self.pos = self.game.camera.reverse(pg.mouse.get_pos())
+        self.x = self.pos[0] - self.game.player.pos.x
+        self.y = self.pos[1] - self.game.player.pos.y
         self.angle = math.atan2(self.x, self.y)
         self.angle = (180 / math.pi) * (-self.angle)
-        self.rect.center = (self.mousex, self.mousey)
+        self.hit_rect = self.rect
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -76,13 +76,16 @@ class Player(pg.sprite.Sprite):
         keys = pg.key.get_pressed()
         mouse = pg.mouse.get_pressed()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
-            self.vel = vec(-PLAYER_ROT_SPEED, 0)
+            self.vel[0] =(-PLAYER_SPEED)
         if keys[pg.K_RIGHT] or keys[pg.K_d]:
-            self.vel = vec(PLAYER_SPEED, 0)
+            self.vel[0] = (PLAYER_SPEED)
         if keys[pg.K_UP] or keys[pg.K_w]:
-            self.vel = vec(0, -PLAYER_SPEED)
+            self.vel[1] = (-PLAYER_SPEED)
         if keys[pg.K_DOWN] or keys[pg.K_s]:
-            self.vel = vec(0, PLAYER_SPEED)
+            self.vel[1] = (PLAYER_SPEED)
+        if self.vel[0] != 0 and self.vel[1] != 0:
+            self.vel[0] *= 0.7071
+            self.vel[1] *= 0.7071
         if mouse[0]:
             now = pg.time.get_ticks()
             if now - self.last_shot > BULLET_RATE:

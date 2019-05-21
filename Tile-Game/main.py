@@ -190,10 +190,11 @@ class Game:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
             if self.draw_debug:
                 pg.draw.rect(self.screen, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
-                draw_text(self.screen, 'Mouse X, Y: ' + str(pg.mouse.get_pos()), 22, 120, 60)
-            	#draw_text(self.screen, str(self.mouse.mousex) + str(self.mouse.mousey), 22, 100, 150)
-                draw_text(self.screen, 'Player X, Y: ' + str(self.player.pos), 22, 120, 90)
-                #draw_text(self.screen, str(self.mouse.hit_rect.center), 22, 100, 120)
+                draw_text(self.screen, 'Mouse Screen X, Y: ' + str(pg.mouse.get_pos()), 22, 150, 60)
+                draw_text(self.screen, 'Mouse rel. to Player X, Y: ' + str(int(self.mouse.x)) + ', ' + str(int(self.mouse.y)), 22, 150, 90)
+                draw_text(self.screen, 'Mouse World X, Y: ' + str(self.mouse.pos), 22, 150, 150)
+                draw_text(self.screen, 'Player X, Y: ' + str(self.player.pos), 22, 150, 120)
+                draw_text(self.screen, str(self.mouse.hit_rect.center), 22, 100, 120)
 
         if self.draw_debug:
             for wall in self.walls:
