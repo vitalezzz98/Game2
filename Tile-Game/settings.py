@@ -32,12 +32,21 @@ PLAYER_HEALTH = 100
 PLAYER_SPEED = 300
 PLAYER_ROT_SPEED = 250
 PLAYER_IMG = 'soldier1_gun.png'
+PLAYER_IDLE_IMG = ['surv_idle (1).png', 'surv_idle (2).png', 'surv_idle (3).png', 'surv_idle (4).png', 'surv_idle (5).png', 'surv_idle (6).png',
+                    'surv_idle (7).png', 'surv_idle (8).png', 'surv_idle (9).png', 'surv_idle (10).png', 'surv_idle (11).png', 'surv_idle (12).png',
+                    'surv_idle (13).png', 'surv_idle (14).png', 'surv_idle (15).png', 'surv_idle (16).png', 'surv_idle (17).png', 'surv_idle (18).png',
+                    'surv_idle (19).png', 'surv_idle (20).png',]
+PLAYER_MOVE_IMG = ['surv_move (1).png', 'surv_move (2).png', 'surv_move (3).png', 'surv_move (4).png', 'surv_move (5).png', 'surv_move (6).png',
+                    'surv_move (7).png', 'surv_move (8).png', 'surv_move (9).png', 'surv_move (10).png', 'surv_move (11).png', 'surv_move (12).png',
+                    'surv_move (13).png', 'surv_move (14).png', 'surv_move (15).png', 'surv_move (16).png', 'surv_move (17).png', 'surv_move (18).png',
+                    'surv_move (19).png', 'surv_move (20).png',]
+PLAYER_SHOOT_IMG = ['surv_shoot (1).png', 'surv_shoot (2).png', 'surv_shoot (3).png']
 PLAYER_HIT_RECT = pg.Rect(0, 0, 35, 35)
-BARREL_OFFSET = vec(30, 10)
+BARREL_OFFSET = vec(30, 14)
 
 # Gun settings
-BULLET_IMG = 'bullet.png'
-BULLET_SPEED = 500
+BULLET_IMG = 'bullet_pistol.png'
+BULLET_SPEED = 750
 BULLET_LIFETIME = 1000
 BULLET_RATE = 400
 KICKBACK = 200

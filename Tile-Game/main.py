@@ -49,14 +49,24 @@ class Game:
         map_folder = path.join(path.dirname(__file__), 'maps')
         snd_folder = path.join(path.dirname(__file__), 'sound')
         music_folder = path.join(path.dirname(__file__), 'music')
+        player_img_folder = path.join(path.dirname(__file__), 'player')
         self.map = TiledMap(path.join(map_folder, 'tilemap.tmx'))
         self.map_img = self.map.make_map()
         self.map_rect = self.map_img.get_rect()
-        self.player_img = pg.image.load(path.join(img_folder, PLAYER_IMG)).convert_alpha()
+        #self.player_img = pg.image.load(path.join(img_folder, PLAYER_IMG)).convert_alpha()
         self.mob_img = pg.image.load(path.join(img_folder, MOB_IMG)).convert_alpha()
         self.bullet_img = pg.image.load(path.join(img_folder, BULLET_IMG)).convert_alpha()
         self.wall_img = pg.image.load(path.join(img_folder, WALL_IMG)).convert_alpha()
         self.wall_img = pg.transform.scale(self.wall_img, (TILESIZE, TILESIZE))
+        self.player_idles = []
+        for img in PLAYER_IDLE_IMG:
+            self.player_idles.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
+        self.player_moves = []
+        for img in PLAYER_MOVE_IMG:
+            self.player_moves.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
+        self.player_shoots = []
+        for img in PLAYER_SHOOT_IMG:
+            self.player_shoots.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
         self.gun_flashes = []
         for img in MUZZLE_FLASHES:
             self.gun_flashes.append(pg.image.load(path.join(img_folder, img)).convert_alpha())
@@ -190,10 +200,11 @@ class Game:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
             if self.draw_debug:
                 pg.draw.rect(self.screen, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
-                draw_text(self.screen, 'Mouse X, Y: ' + str(pg.mouse.get_pos()), 22, 120, 60)
-            	#draw_text(self.screen, str(self.mouse.mousex) + str(self.mouse.mousey), 22, 100, 150)
-                draw_text(self.screen, 'Player X, Y: ' + str(self.player.pos), 22, 120, 90)
-                #draw_text(self.screen, str(self.mouse.hit_rect.center), 22, 100, 120)
+                draw_text(self.screen, 'Mouse Screen X, Y: ' + str(pg.mouse.get_pos()), 22, 150, 60)
+                draw_text(self.screen, 'Mouse rel. to Player X, Y: ' + str(int(self.mouse.x)) + ', ' + str(int(self.mouse.y)), 22, 150, 90)
+                draw_text(self.screen, 'Mouse World X, Y: ' + str(self.mouse.pos), 22, 150, 150)
+                draw_text(self.screen, 'Player X, Y: ' + str(self.player.pos), 22, 150, 120)
+                draw_text(self.screen, str(self.mouse.hit_rect.center), 22, 100, 120)
 
         if self.draw_debug:
             for wall in self.walls:
