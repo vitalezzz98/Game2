@@ -71,7 +71,7 @@ class Player(pg.sprite.Sprite):
         self.rot = 0
         self.last_shot = 0
         self.health = PLAYER_HEALTH
-        self.weapon = 'pistol'
+        self.weapon = 'shotgun'
 
     def get_keys(self):
         self.vel = vec(0, 0)
@@ -130,24 +130,44 @@ class Player(pg.sprite.Sprite):
         else:
             self.shooting = False
         now = pg.time.get_ticks()
-        if self.standing:
-            if now - self.last_update > 50:
-                self.last_update = now
-                self.current_frame = (self.current_frame + 1) % len(self.game.player_idles)
-                self.image = pg.transform.scale(self.game.player_idles[self.current_frame], (64, 55))
-                self.image_copy = pg.transform.rotate(self.image, 270)
-        if self.moving:
-            if now - self.last_update > 20:
-                self.last_update = now
-                self.current_frame = (self.current_frame + 1) % len(self.game.player_moves)
-                self.image = pg.transform.scale(self.game.player_moves[self.current_frame], (64, 55))
-                self.image_copy = pg.transform.rotate(self.image, 270)
-        if self.shooting:
-            if now - self.last_update > 150:
-                self.last_update = now
-                self.current_frame = (self.current_frame + 1) % len(self.game.player_shoots)
-                self.image = pg.transform.scale(self.game.player_shoots[self.current_frame], (64, 55))
-                self.image_copy = pg.transform.rotate(self.image, 270)
+        if self.weapon == 'pistol':
+            if self.standing:
+                if now - self.last_update > 50:
+                    self.last_update = now
+                    self.current_frame = (self.current_frame + 1) % len(self.game.player_idles)
+                    self.image = pg.transform.scale(self.game.player_idles[self.current_frame], (64, 55))
+                    self.image_copy = pg.transform.rotate(self.image, 270)
+            if self.moving:
+                if now - self.last_update > 20:
+                    self.last_update = now
+                    self.current_frame = (self.current_frame + 1) % len(self.game.player_moves)
+                    self.image = pg.transform.scale(self.game.player_moves[self.current_frame], (64, 55))
+                    self.image_copy = pg.transform.rotate(self.image, 270)
+            if self.shooting:
+                if now - self.last_update > 150:
+                    self.last_update = now
+                    self.current_frame = (self.current_frame + 1) % len(self.game.player_shoots)
+                    self.image = pg.transform.scale(self.game.player_shoots[self.current_frame], (64, 55))
+                    self.image_copy = pg.transform.rotate(self.image, 270)
+        elif self.weapon == 'shotgun':
+            if self.standing:
+                if now - self.last_update > 50:
+                    self.last_update = now
+                    self.current_frame = (self.current_frame + 1) % len(self.game.player_shotgun_idles)
+                    self.image = pg.transform.scale(self.game.player_shotgun_idles[self.current_frame], (64, 55))
+                    self.image_copy = pg.transform.rotate(self.image, 270)
+            if self.moving:
+                if now - self.last_update > 20:
+                    self.last_update = now
+                    self.current_frame = (self.current_frame + 1) % len(self.game.player_shotgun_moves)
+                    self.image = pg.transform.scale(self.game.player_shotgun_moves[self.current_frame], (64, 55))
+                    self.image_copy = pg.transform.rotate(self.image, 270)
+            if self.shooting:
+                if now - self.last_update > 150:
+                    self.last_update = now
+                    self.current_frame = (self.current_frame + 1) % len(self.game.player_shotgun_shoots)
+                    self.image = pg.transform.scale(self.game.player_shotgun_shoots[self.current_frame], (64, 55))
+                    self.image_copy = pg.transform.rotate(self.image, 270)
         self.get_keys()
         self.image = pg.transform.rotate(self.image_copy, int(-self.game.mouse.angle))
         self.rect = self.image.get_rect()

@@ -99,6 +99,15 @@ class Game:
         self.player_shoots = []
         for img in PLAYER_SHOOT_IMG:
             self.player_shoots.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
+        self.player_shotgun_idles = []
+        for img in PLAYER_SHOTGUN_IDLE_IMG:
+            self.player_shotgun_idles.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
+        self.player_shotgun_moves = []
+        for img in PLAYER_SHOTGUN_MOVE_IMG:
+            self.player_shotgun_moves.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
+        self.player_shotgun_shoots = []
+        for img in PLAYER_SHOTGUN_SHOOT_IMG:
+            self.player_shotgun_shoots.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
         self.mob_idles = []
         for img in MOB_IDLE_IMG:
             self.mob_idles.append(pg.image.load(path.join(zombie_img_folder, img)).convert_alpha())

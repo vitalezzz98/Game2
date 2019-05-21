@@ -42,6 +42,15 @@ PLAYER_MOVE_IMG = ['surv_move (1).png', 'surv_move (2).png', 'surv_move (3).png'
                     'surv_move (13).png', 'surv_move (14).png', 'surv_move (15).png', 'surv_move (16).png', 'surv_move (17).png', 'surv_move (18).png',
                     'surv_move (19).png', 'surv_move (20).png',]
 PLAYER_SHOOT_IMG = ['surv_shoot (1).png', 'surv_shoot (2).png', 'surv_shoot (3).png']
+PLAYER_SHOTGUN_IDLE_IMG = ['surv_shot_idle (1).png', 'surv_shot_idle (2).png', 'surv_shot_idle (3).png', 'surv_shot_idle (4).png', 'surv_shot_idle (5).png', 'surv_shot_idle (6).png',
+                    'surv_shot_idle (7).png', 'surv_shot_idle (8).png', 'surv_shot_idle (9).png', 'surv_shot_idle (10).png', 'surv_shot_idle (11).png', 'surv_shot_idle (12).png',
+                    'surv_shot_idle (13).png', 'surv_shot_idle (14).png', 'surv_shot_idle (15).png', 'surv_shot_idle (16).png', 'surv_shot_idle (17).png', 'surv_shot_idle (18).png',
+                    'surv_shot_idle (19).png', 'surv_shot_idle (20).png',]
+PLAYER_SHOTGUN_MOVE_IMG = ['surv_shot_move (1).png', 'surv_shot_move (2).png', 'surv_shot_move (3).png', 'surv_shot_move (4).png', 'surv_shot_move (5).png', 'surv_shot_move (6).png',
+                    'surv_shot_move (7).png', 'surv_shot_move (8).png', 'surv_shot_move (9).png', 'surv_shot_move (10).png', 'surv_shot_move (11).png', 'surv_shot_move (12).png',
+                    'surv_shot_move (13).png', 'surv_shot_move (14).png', 'surv_shot_move (15).png', 'surv_shot_move (16).png', 'surv_shot_move (17).png', 'surv_shot_move (18).png',
+                    'surv_shot_move (19).png', 'surv_shot_move (20).png',]
+PLAYER_SHOTGUN_SHOOT_IMG = ['surv_shot_shoot (1).png', 'surv_shot_shoot (2).png', 'surv_shot_shoot (3).png']
 PLAYER_HIT_RECT = pg.Rect(0, 0, 35, 35)
 BARREL_OFFSET = vec(30, 14)
 
