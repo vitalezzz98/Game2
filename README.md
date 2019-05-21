@@ -1,2 +1,2 @@
 # Game2
-Simple Tile base top down shooter
+Simple Tile based top down shooter
