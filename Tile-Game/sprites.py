@@ -94,6 +94,10 @@ class Player(pg.sprite.Sprite):
         if mouse[0]:
             self.shoot()
         if keys[pg.K_r]:
+            snd = choice(self.game.weapons_reload_sounds[self.weapon])
+            if snd.get_num_channels() > 2:
+                snd.stop()
+            snd.play()
             self.reload()
 
     def shoot(self):

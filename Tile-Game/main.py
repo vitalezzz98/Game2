@@ -6,6 +6,8 @@
 # Zombie model by rileygombart
 # Player sounds by Michel Baradari
 # Shots sounds by Michel Baradari
+# Shotgun reloading sounds by Mike Koenig
+# Pistol reloading sounds by Gary http://fossilrecords.net/
 # Zombie sounds by artisticdude
 # Inventory sounds by artisticdude
 # Post apocalypse soundtrack by Alexandr Zhelanov, https://soundcloud.com/alexandr-zhelanov
@@ -142,6 +144,13 @@ class Game:
                 s = pg.mixer.Sound(path.join(snd_folder, snd))
                 s.set_volume(SOUNDS_VOLUME)
                 self.weapons_sounds[weapon].append(s)
+        self.weapons_reload_sounds = {}
+        for weapon in WEAPON_RELOADING_SOUNDS:
+            self.weapons_reload_sounds[weapon] = []
+            for snd in WEAPON_RELOADING_SOUNDS[weapon]:
+                s = pg.mixer.Sound(path.join(snd_folder, snd))
+                s.set_volume(SOUNDS_VOLUME)
+                self.weapons_reload_sounds[weapon].append(s)
         self.zombie_moan_sounds = []
         for snd in ZOMBIE_MOAN_SOUNDS:
             s = pg.mixer.Sound(path.join(snd_folder, snd))

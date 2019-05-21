@@ -124,6 +124,8 @@ BG_MUSIC = ['City.ogg', 'Myst.ogg', 'Road.ogg']
 PLAYER_HIT_SOUNDS = ['pain1.wav', 'pain2.wav', 'pain3.wav', 'pain4.wav']
 ZOMBIE_MOAN_SOUNDS = ['zombie_moan1.wav', 'zombie_moan2.wav', 'zombie_moan3.wav', 'zombie_moan4.wav']
 ZOMBIE_HIT_SOUNDS = ['zombie_hit1.wav', 'zombie_hit2.wav', 'zombie_hit3.wav', 'zombie_hit4.wav', 'zombie_hit5.wav']
+WEAPON_RELOADING_SOUNDS = {'pistol': ['pistol_reload.wav'],
+                           'shotgun': ['shotgun_reload.wav']}
 WEAPON_SOUNDS = {'pistol': ['pistol.wav'],
                  'shotgun': ['shotgun.wav']}
 EFFECT_SOUNDS = {'health_up': 'health_pick.wav'}

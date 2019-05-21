@@ -1804,7 +1804,7 @@
   <object id="770" name="Wall" x="6656" y="8512" width="64" height="384"/>
   <object id="771" name="Wall" x="6528" y="8832" width="128" height="64"/>
   <object id="773" name="Health" x="6544" y="8528" width="32" height="32"/>
-  <object id="774" name="Shotgun" x="6608" y="8656" width="32" height="32"/>
+  <object id="774" name="Shotgun" x="3328" y="3856" width="32" height="32"/>
   <object id="775" name="Health" x="6112" y="7056" width="32" height="32"/>
   <object id="776" name="Health" x="6032" y="4960" width="32" height="32"/>
   <object id="777" name="Health" x="4352" y="5264" width="32" height="32"/>
