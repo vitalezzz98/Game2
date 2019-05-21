@@ -82,7 +82,7 @@ class Game:
         self.font = path.join(path.dirname(__file__), 'Apocalypse.ttf')
         self.dim_screen = pg.Surface(self.screen.get_size()).convert_alpha()
         self.dim_screen.fill((0, 0, 0, 180))
-        self.map = TiledMap(path.join(map_folder, 'tilemap.tmx'))
+        self.map = TiledMap(path.join(map_folder, 'tilemap2.tmx'))
         self.map_img = self.map.make_map()
         self.map_rect = self.map_img.get_rect()
         self.bullet_images = {}
@@ -269,12 +269,13 @@ class Game:
                 if self.draw_debug_3:
                     self.draw_text('Mouse World X, Y: ' + str(pg.mouse.get_pos()), self.font, 22, WHITE, 10, 120, align='nw')
                 if self.draw_debug_4:
-                    self.draw_text('Player X, Y: ' + str(pg.mouse.get_pos()), self.font, 22, WHITE, 10, 150, align='nw')
+                    self.draw_text('Player shooting: ' + str(self.player.shooting), self.font, 22, WHITE, 10, 150, align='nw')
         if self.draw_debug:
             for wall in self.walls:
                 pg.draw.rect(self.screen, CYAN, self.camera.apply_rect(wall.rect), 1)
         # HUD draw
         draw_player_health(self.screen, 10, 10, self.player.health / PLAYER_HEALTH)
+        self.draw_text('Ammo: ' + str(self.player.ammo), self.font, 22, WHITE, WIDTH / 2, 20, align='center')
         if self.paused:
             self.screen.blit(self.dim_screen, (0, 0))
             self.draw_text("Paused", self.font, 105, DARK_RED, WIDTH / 2, HEIGHT / 2, align="center")

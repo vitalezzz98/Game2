@@ -71,7 +71,9 @@ class Player(pg.sprite.Sprite):
         self.rot = 0
         self.last_shot = 0
         self.health = PLAYER_HEALTH
-        self.weapon = 'shotgun'
+        self.weapon = 'pistol'
+        self.ammo = WEAPONS[self.weapon]['ammo']
+        self.shooting = False
 
     def get_keys(self):
         self.vel = vec(0, 0)
@@ -91,22 +93,29 @@ class Player(pg.sprite.Sprite):
             self.vel[1] *= 0.7071
         if mouse[0]:
             self.shoot()
+        if keys[pg.K_r]:
+            self.reload()
 
     def shoot(self):
         now = pg.time.get_ticks()
-        if now - self.last_shot > WEAPONS[self.weapon]['rate']:
-            self.last_shot = now
-            dir = vec(1, 0).rotate(self.game.mouse.angle + 90)
-            pos = self.pos + BARREL_OFFSET.rotate(self.game.mouse.angle + 90)
-            self.vel = vec(-WEAPONS[self.weapon]['kickback'], 0).rotate(self.game.mouse.angle + 90)
-            for i in range(WEAPONS[self.weapon]['bullet_count']):
-                spread = uniform(-WEAPONS[self.weapon]['spread'], WEAPONS[self.weapon]['spread'])
-                Bullet(self.game, pos, dir.rotate(spread))
-                snd = choice(self.game.weapons_sounds[self.weapon])
-                if snd.get_num_channels() > 2:
-                    snd.stop()
-                snd.play()
-            MuzzleFlash(self.game, pos)
+        if self.ammo > 0:
+            if now - self.last_shot > WEAPONS[self.weapon]['rate']:
+                self.last_shot = now
+                dir = vec(1, 0).rotate(self.game.mouse.angle + 90)
+                pos = self.pos + BARREL_OFFSET.rotate(self.game.mouse.angle + 90)
+                self.vel = vec(-WEAPONS[self.weapon]['kickback'], 0).rotate(self.game.mouse.angle + 90)
+                for i in range(WEAPONS[self.weapon]['bullet_count']):
+                    spread = uniform(-WEAPONS[self.weapon]['spread'], WEAPONS[self.weapon]['spread'])
+                    Bullet(self.game, pos, dir.rotate(spread))
+                    snd = choice(self.game.weapons_sounds[self.weapon])
+                    if snd.get_num_channels() > 2:
+                        snd.stop()
+                    snd.play()
+                self.ammo -= 1
+                MuzzleFlash(self.game, pos)
+
+    def reload(self):
+        self.ammo = WEAPONS[self.weapon]['ammo']
 
     def add_health(self, amount):
         self.health += amount
@@ -125,8 +134,8 @@ class Player(pg.sprite.Sprite):
             self.moving = False
         if mouse[0]:
             self.shooting = True
-            self.standing = False
             self.moving = False
+            self.standing = False
         else:
             self.shooting = False
         now = pg.time.get_ticks()
@@ -143,12 +152,12 @@ class Player(pg.sprite.Sprite):
                     self.current_frame = (self.current_frame + 1) % len(self.game.player_moves)
                     self.image = pg.transform.scale(self.game.player_moves[self.current_frame], (64, 55))
                     self.image_copy = pg.transform.rotate(self.image, 270)
-            if self.shooting:
-                if now - self.last_update > 150:
-                    self.last_update = now
-                    self.current_frame = (self.current_frame + 1) % len(self.game.player_shoots)
-                    self.image = pg.transform.scale(self.game.player_shoots[self.current_frame], (64, 55))
-                    self.image_copy = pg.transform.rotate(self.image, 270)
+            #if self.shooting:
+            #    if now - self.last_update > 150:
+            #        self.last_update = now
+            #        self.current_frame = (self.current_frame + 1) % len(self.game.player_shoots)
+            #        self.image = pg.transform.scale(self.game.player_shoots[self.current_frame], (64, 55))
+            #        self.image_copy = pg.transform.rotate(self.image, 270)
         elif self.weapon == 'shotgun':
             if self.standing:
                 if now - self.last_update > 50:

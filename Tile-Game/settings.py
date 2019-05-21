@@ -65,7 +65,8 @@ WEAPONS['pistol'] = {'bullet_speed': 750,
                      'spread': 3,
                      'damage': 10,
                      'bullet_size': 'lg',
-                     'bullet_count': 1}
+                     'bullet_count': 1,
+                     'ammo': 15}
 WEAPONS['shotgun'] = {'bullet_speed': 700,
                       'bullet_lifetime': 1000,
                       'rate': 1000,
@@ -73,7 +74,8 @@ WEAPONS['shotgun'] = {'bullet_speed': 700,
                       'spread': 12,
                       'damage': 5,
                       'bullet_size': 'sm',
-                      'bullet_count': 12}
+                      'bullet_count': 12,
+                      'ammo': 7}
 
 # Mob settings
 MOB_IDLE_IMG = ['zomb_idle (1).png', 'zomb_idle (2).png', 'zomb_idle (3).png', 'zomb_idle (4).png', 'zomb_idle (5).png', 'zomb_idle (6).png',

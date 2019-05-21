@@ -3,6 +3,7 @@ A or Arrow Left    - Move Left
 D or Arrow Right   - Move Right
 S or Arrow Down    - Move down
 Left mouse button  - Shoot
+R                  - Reload
 Escape             - Pause
 
 
