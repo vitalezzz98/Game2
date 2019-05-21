@@ -262,6 +262,7 @@ class Game:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
             if self.draw_debug:
                 pg.draw.rect(self.screen, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
+                pg.draw.rect(self.screen, CYAN, self.camera.apply_rect(sprite.rect), 1)
                 if self.draw_debug_1:
                     self.draw_text('Mouse Screen X, Y: ' + str(pg.mouse.get_pos()), self.font, 22, WHITE, 10, 60, align='nw')
                 if self.draw_debug_2:

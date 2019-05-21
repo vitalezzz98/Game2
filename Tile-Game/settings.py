@@ -15,8 +15,10 @@ BRIGHTBROWN = (87, 77, 51)
 CYAN = (109, 221, 207)
 
 # Game settings
-WIDTH = 1024   # 16 * 64 or 32 * 32 or 64 * 16
-HEIGHT = 768  # 16 * 48 or 32 * 24 or 64 * 12
+#WIDTH = 1024   # 16 * 64 or 32 * 32 or 64 * 16
+#HEIGHT = 768  # 16 * 48 or 32 * 24 or 64 * 12
+WIDTH = 1280
+HEIGHT = 720
 FPS = 60
 TITLE = "Tilemap Demo"
 BGCOLOR = BRIGHTBROWN
