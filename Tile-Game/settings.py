@@ -1,4 +1,5 @@
 import pygame as pg
+from random import choice
 vec = pg.math.Vector2
 
 # Define some colors (R, G, B)
@@ -44,14 +45,26 @@ PLAYER_SHOOT_IMG = ['surv_shoot (1).png', 'surv_shoot (2).png', 'surv_shoot (3).
 PLAYER_HIT_RECT = pg.Rect(0, 0, 35, 35)
 BARREL_OFFSET = vec(30, 14)
 
-# Gun settings
+# Weapon settings
 BULLET_IMG = 'bullet_pistol.png'
-BULLET_SPEED = 750
-BULLET_LIFETIME = 1000
-BULLET_RATE = 400
-KICKBACK = 200
-GUN_SPREAD = 5
-BULLET_DAMAGE = 10
+BULLET_SHOTGUN_IMG = 'bullet_shotgun.png'
+WEAPONS = {}
+WEAPONS['pistol'] = {'bullet_speed': 750,
+                     'bullet_lifetime': 1300,
+                     'rate': 450,
+                     'kickback': 200,
+                     'spread': 3,
+                     'damage': 10,
+                     'bullet_size': 'lg',
+                     'bullet_count': 1}
+WEAPONS['shotgun'] = {'bullet_speed': 700,
+                      'bullet_lifetime': 1000,
+                      'rate': 1000,
+                      'kickback': 400,
+                      'spread': 12,
+                      'damage': 5,
+                      'bullet_size': 'sm',
+                      'bullet_count': 12}
 
 # Mob settings
 MOB_IDLE_IMG = ['zomb_idle (1).png', 'zomb_idle (2).png', 'zomb_idle (3).png', 'zomb_idle (4).png', 'zomb_idle (5).png', 'zomb_idle (6).png',
@@ -86,7 +99,8 @@ BULLET_LAYER = 3
 EFFECTS_LAYER = 4
 
 # Items
-ITEM_IMAGES = {'Health': 'health_pack.png'}
+ITEM_IMAGES = {'Health': 'health_pack.png',
+               'Shotgun': 'shotgun.png'}
 HEALTH_PACK_AMOUNT = 20
 BOB_RANGE = 15
 BOB_SPEED = 0.3
@@ -97,5 +111,7 @@ BG_MUSIC = ['City.ogg', 'Myst.ogg', 'Road.ogg']
 PLAYER_HIT_SOUNDS = ['pain1.wav', 'pain2.wav', 'pain3.wav', 'pain4.wav']
 ZOMBIE_MOAN_SOUNDS = ['zombie_moan1.wav', 'zombie_moan2.wav', 'zombie_moan3.wav', 'zombie_moan4.wav']
 ZOMBIE_HIT_SOUNDS = ['zombie_hit1.wav', 'zombie_hit2.wav', 'zombie_hit3.wav', 'zombie_hit4.wav', 'zombie_hit5.wav']
-WEAPON_SOUNDS_GUN = ['pistol.wav']
+WEAPON_SOUNDS = {'pistol': ['pistol.wav'],
+                 'shotgun': ['shotgun.wav']}
 EFFECT_SOUNDS = {'health_up': 'health_pick.wav'}
+                 #'shotgun_pickup': 'something.wav'

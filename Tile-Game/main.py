@@ -39,6 +39,7 @@ def draw_player_health(surf, x, y, pct):
 
 class Game:
     def __init__(self):
+        pg.mixer.pre_init(44100, -16, 1, 2048)
         pg.init()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
@@ -84,7 +85,9 @@ class Game:
         self.map = TiledMap(path.join(map_folder, 'tilemap.tmx'))
         self.map_img = self.map.make_map()
         self.map_rect = self.map_img.get_rect()
-        self.bullet_img = pg.image.load(path.join(img_folder, BULLET_IMG)).convert_alpha()
+        self.bullet_images = {}
+        self.bullet_images['lg'] = pg.image.load(path.join(img_folder, BULLET_IMG)).convert_alpha()
+        self.bullet_images['sm'] = pg.image.load(path.join(img_folder, BULLET_SHOTGUN_IMG)).convert_alpha()
         self.wall_img = pg.image.load(path.join(img_folder, WALL_IMG)).convert_alpha()
         self.wall_img = pg.transform.scale(self.wall_img, (TILESIZE, TILESIZE))
         self.player_idles = []
@@ -124,11 +127,12 @@ class Game:
         for type in EFFECT_SOUNDS:
             self.effects_sounds[type] = pg.mixer.Sound(path.join(snd_folder, EFFECT_SOUNDS[type]))
         self.weapons_sounds = {}
-        self.weapons_sounds['gun'] = []
-        for snd in WEAPON_SOUNDS_GUN:
-            s = pg.mixer.Sound(path.join(snd_folder, snd))
-            s.set_volume(SOUNDS_VOLUME)
-            self.weapons_sounds['gun'].append(s)
+        for weapon in WEAPON_SOUNDS:
+            self.weapons_sounds[weapon] = []
+            for snd in WEAPON_SOUNDS[weapon]:
+                s = pg.mixer.Sound(path.join(snd_folder, snd))
+                s.set_volume(SOUNDS_VOLUME)
+                self.weapons_sounds[weapon].append(s)
         self.zombie_moan_sounds = []
         for snd in ZOMBIE_MOAN_SOUNDS:
             s = pg.mixer.Sound(path.join(snd_folder, snd))
@@ -169,7 +173,7 @@ class Game:
                 Mob(self, obj_center.x, obj_center.y)
             if tile_object.name == 'Wall':
                 Obstacle(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
-            if tile_object.name in ['Health']:
+            if tile_object.name in ['Health', 'Shotgun']:
                 Item(self, obj_center, tile_object.name)
         self.camera = Camera(self.map.width, self.map.height)
         self.mouse = Mouse(self, self.player.pos.x, self.player.pos.y)
@@ -206,6 +210,10 @@ class Game:
                 hit.kill()
                 self.effects_sounds['health_up'].play()
                 self.player.add_health(HEALTH_PACK_AMOUNT)
+            if hit.type == 'Shotgun':
+                hit.kill()
+                self.effects_sounds['health_up'].play()
+                self.player.weapon = 'shotgun'
         # zombie hit player
         hits = pg.sprite.spritecollide(self.player, self.mobs, False, collide_hit_rect)
         for hit in hits:
@@ -226,7 +234,7 @@ class Game:
             if hit.target_dist.length_squared() > hit.detect_radius**2:
                 hit.detect_radius += 100
             BloodSplashGreen(self, hit.pos)
-            hit.health -= BULLET_DAMAGE
+            hit.health -= WEAPONS[self.player.weapon]['damage'] * len(hits[hit])
             hit.vel = vec(0, 0)
 
     def draw_grid(self):
@@ -237,12 +245,11 @@ class Game:
 
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-        # self.screen.fill(BGCOLOR)
         self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
         # self.draw_grid()
         for sprite in self.all_sprites:
-            if isinstance(sprite, Mob):
-                sprite.draw_health()
+            #if isinstance(sprite, Mob):
+            #    sprite.draw_health()
             self.screen.blit(sprite.image, self.camera.apply(sprite))
             if self.draw_debug:
                 pg.draw.rect(self.screen, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
@@ -257,7 +264,6 @@ class Game:
         if self.draw_debug:
             for wall in self.walls:
                 pg.draw.rect(self.screen, CYAN, self.camera.apply_rect(wall.rect), 1)
-        # pg.draw.rect(self.screen, WHITE, self.player.hit_rect, 2)
         # HUD draw
         draw_player_health(self.screen, 10, 10, self.player.health / PLAYER_HEALTH)
         if self.paused:
