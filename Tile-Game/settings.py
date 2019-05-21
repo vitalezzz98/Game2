@@ -8,6 +8,7 @@ DARKGREY = (40, 40, 40)
 LIGHTGREY = (100, 100, 100)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+DARK_RED = (131, 0, 0)
 YELLOW = (255, 255, 0)
 BRIGHTBROWN = (87, 77, 51)
 CYAN = (109, 221, 207)
@@ -31,7 +32,6 @@ WALL_IMG = 'tileGreen_39.png'
 PLAYER_HEALTH = 100
 PLAYER_SPEED = 300
 PLAYER_ROT_SPEED = 250
-PLAYER_IMG = 'soldier1_gun.png'
 PLAYER_IDLE_IMG = ['surv_idle (1).png', 'surv_idle (2).png', 'surv_idle (3).png', 'surv_idle (4).png', 'surv_idle (5).png', 'surv_idle (6).png',
                     'surv_idle (7).png', 'surv_idle (8).png', 'surv_idle (9).png', 'surv_idle (10).png', 'surv_idle (11).png', 'surv_idle (12).png',
                     'surv_idle (13).png', 'surv_idle (14).png', 'surv_idle (15).png', 'surv_idle (16).png', 'surv_idle (17).png', 'surv_idle (18).png',
@@ -54,14 +54,20 @@ GUN_SPREAD = 5
 BULLET_DAMAGE = 10
 
 # Mob settings
-MOB_IMG = 'zoimbie1_hold.png'
+MOB_IDLE_IMG = ['zomb_idle (1).png', 'zomb_idle (2).png', 'zomb_idle (3).png', 'zomb_idle (4).png', 'zomb_idle (5).png', 'zomb_idle (6).png',
+                'zomb_idle (7).png', 'zomb_idle (8).png', 'zomb_idle (9).png', 'zomb_idle (10).png', 'zomb_idle (11).png', 'zomb_idle (12).png',
+                'zomb_idle (13).png', 'zomb_idle (14).png', 'zomb_idle (15).png', 'zomb_idle (16).png', 'zomb_idle (17).png',]
+MOB_MOVE_IMG = ['zomb_move (1).png', 'zomb_move (2).png', 'zomb_move (3).png', 'zomb_move (4).png', 'zomb_move (5).png', 'zomb_move (6).png',
+                'zomb_move (7).png', 'zomb_move (8).png', 'zomb_move (9).png', 'zomb_move (10).png', 'zomb_move (11).png', 'zomb_move (12).png',
+                'zomb_move (13).png', 'zomb_move (14).png', 'zomb_move (15).png', 'zomb_move (16).png', 'zomb_move (17).png',]
+MOB_ATTACK_IMG = ['zomb_attack (1).png', 'zomb_attack (2).png', 'zomb_attack (3).png', 'zomb_attack (4).png', 'zomb_attack (5).png', 'zomb_attack (6).png',
+                'zomb_attack (7).png', 'zomb_attack (8).png', 'zomb_attack (9).png']
 MOB_SPEEDS = [200, 180, 160, 140, 120]
 MOB_HIT_RECT = pg.Rect(0, 0, 30, 30)
 MOB_HEALTH = 100
 MOB_DAMAGE = 10
 MOB_KNOCKBACK = 20
 AVOID_RADIUS = 40
-DETECT_RADIUS = 400
 
 # Effects
 MUZZLE_FLASHES = ['whitePuff15.png', 'whitePuff16.png', 'whitePuff17.png', 'whitePuff18.png']

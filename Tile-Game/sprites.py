@@ -162,7 +162,10 @@ class Mob(pg.sprite.Sprite):
         self.groups = game.all_sprites, game.mobs
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = game.mob_img.copy()
+        self.current_frame = 0
+        self.last_update = 0
+        self.image = pg.transform.scale(game.mob_idles[self.current_frame], (63, 57))
+        self.image_copy = self.image
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
         self.hit_rect = MOB_HIT_RECT.copy()
@@ -175,6 +178,8 @@ class Mob(pg.sprite.Sprite):
         self.health = MOB_HEALTH
         self.speed = choice(MOB_SPEEDS)
         self.target = game.player
+        self.target_dist = self.target.pos - self.pos
+        self.detect_radius = 400
 
     def avoid_mobs(self):
         for mob in self.game.mobs:
@@ -184,12 +189,36 @@ class Mob(pg.sprite.Sprite):
                     self.acc += dist.normalize()
 
     def update(self):
-        target_dist = self.target.pos - self.pos
-        if target_dist.length_squared() < DETECT_RADIUS**2:
+        self.target_dist = self.target.pos - self.pos
+        self.rot = self.target_dist.angle_to(vec(1, 0))
+        now = pg.time.get_ticks()
+        if self.vel == (0, 0):
+            self.idle = True
+        else:
+            self.idle = False
+        if self.vel != (0, 0):
+            self.walking = True
+        else:
+            self.walking = False
+        if self.idle:
+            if now - self.last_update > 150:
+                self.last_update = now
+                self.current_frame = (self.current_frame + 1) % len(self.game.mob_idles)
+                self.image = pg.transform.scale(self.game.mob_idles[self.current_frame], (63, 57))
+                self.image_copy = self.image
+                self.image = pg.transform.rotate(self.image_copy, self.rot)
+                self.rect = self.image.get_rect()
+                self.rect.center = self.pos
+        if self.walking:
+            if now - self.last_update > 150:
+                self.last_update = now
+                self.current_frame = (self.current_frame + 1) % len(self.game.mob_moves)
+                self.image = pg.transform.scale(self.game.mob_moves[self.current_frame], (70, 76))
+                self.image_copy = self.image
+        if self.target_dist.length_squared() < self.detect_radius**2:
             if random() < 0.002:
                 choice(self.game.zombie_moan_sounds).play()
-            self.rot = target_dist.angle_to(vec(1, 0))
-            self.image = pg.transform.rotate(self.game.mob_img, self.rot)
+            self.image = pg.transform.rotate(self.image_copy, self.rot)
             self.rect = self.image.get_rect()
             self.rect.center = self.pos
             self.acc = vec(1, 0).rotate(-self.rot)
@@ -203,6 +232,8 @@ class Mob(pg.sprite.Sprite):
             self.hit_rect.centery = self.pos.y
             collide_with_walls(self, self.game.walls, 'y')
             self.rect.center = self.hit_rect.center
+        else:
+            self.vel = vec(0, 0)
         if self.health <= 0:
             self.kill()
 
