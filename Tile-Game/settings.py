@@ -21,6 +21,7 @@ WIDTH = 1280
 HEIGHT = 720
 FPS = 60
 TITLE = "Tilemap Demo"
+MENU_IMAGE = 'menu1.png'
 BGCOLOR = BRIGHTBROWN
 MUSIC_VOLUME = 0.5
 SOUNDS_VOLUME = 0.4
@@ -28,8 +29,6 @@ SOUNDS_VOLUME = 0.4
 TILESIZE = 64
 GRIDWIDTH = WIDTH / TILESIZE
 GRIDHEIGHT = HEIGHT / TILESIZE
-
-WALL_IMG = 'tileGreen_39.png'
 
 # Player settings
 PLAYER_HEALTH = 100
@@ -112,6 +111,9 @@ FLASH_DURATION = 40
 BLOOD_SPLASHES_RED = ['bloodsplats_0003.png', 'bloodsplats_0004.png', 'bloodsplats_0006.png']
 BLOOD_SPLASHES_GREEN = ['bloodZ_0003.png', 'bloodZ_0004.png', 'bloodZ_0006.png']
 BLOOD_DURATION = 20000
+LIGHT_IMG = 'light2.png'
+LIGHT_RADIUS = (500, 500)
+NIGHT_COLOR = (20, 20, 20)
 
 # Layers
 WALL_LAYER = 1
@@ -129,9 +131,19 @@ HEALTH_PACK_AMOUNT = 20
 BOB_RANGE = 15
 BOB_SPEED = 0.3
 
+# Objects
+OBJECT_IMAGES = {'Car1': 'car_black_1.png',
+                 'Car2': 'car_blue_2.png',
+                 'Car3': 'car_red_3.png',
+                 'Car4': 'car_yellow_4.png',
+                 'Car5': 'car_green_5.png'
+                }
+
 # Sounds
-#'Kim.WeLeft.ogg'#
-BG_MUSIC = ['City.ogg', 'Myst.ogg', 'Road.ogg']
+BG_MUSIC = ['City.ogg', 'Myst.ogg', 'Road.ogg', 'Travel_0.ogg', 'Vault_0.ogg']
+MENU_MUSIC = ['Kim.WeLeft.ogg', 'Setelment.ogg']
+END_MUSIC = 'Alert_0.ogg'
+RADIO = 'radio.ogg'
 PLAYER_HIT_SOUNDS = ['pain1.wav', 'pain2.wav', 'pain3.wav', 'pain4.wav']
 ZOMBIE_MOAN_SOUNDS = ['zombie_moan1.wav', 'zombie_moan2.wav', 'zombie_moan3.wav', 'zombie_moan4.wav']
 ZOMBIE_HIT_SOUNDS = ['zombie_hit1.wav', 'zombie_hit2.wav', 'zombie_hit3.wav', 'zombie_hit4.wav', 'zombie_hit5.wav']

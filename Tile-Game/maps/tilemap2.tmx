@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="150" height="150" tilewidth="64" tileheight="64" infinite="0" nextlayerid="11" nextobjectid="803">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="150" height="150" tilewidth="64" tileheight="64" infinite="0" nextlayerid="11" nextobjectid="935">
  <tileset firstgid="1" source="Kenney Topdown Pack.tsx"/>
  <tileset firstgid="541" source="groundGrass.tsx"/>
  <layer id="1" name="ground" width="150" height="150">
@@ -1236,6 +1236,7 @@
  </layer>
  <objectgroup id="10" name="Слой объектов 2">
   <object id="802" name="Player" x="6288" y="8528" width="32" height="32"/>
+  <object id="892" name="Car5" x="3856" y="4528" width="64" height="64" rotation="-9.54842"/>
  </objectgroup>
  <objectgroup id="9" name="Misc">
   <object id="1" name="Wall" x="3200" y="2944" width="512" height="64"/>
@@ -1832,5 +1833,88 @@
   <object id="799" name="Wall" x="5200" y="6992" width="32" height="32"/>
   <object id="800" name="Wall" x="5200" y="7120" width="32" height="32"/>
   <object id="801" name="Wall" x="5200" y="7248" width="32" height="32"/>
+  <object id="844" name="Car1" x="7136" y="7424" width="64" height="64" rotation="-299.271"/>
+  <object id="849" name="Car1" x="7456" y="6464" width="64" height="64" rotation="-347.195"/>
+  <object id="850" name="Car1" x="7360" y="4752" width="64" height="64" rotation="-411.101"/>
+  <object id="851" name="Car1" x="5410.44" y="4684.9" width="64" height="64" rotation="-2.3598"/>
+  <object id="852" name="Car1" x="4944" y="5760" width="64" height="64" rotation="-349.07"/>
+  <object id="853" name="Car1" x="4128" y="7232" width="64" height="64" rotation="31.9939"/>
+  <object id="854" name="Car1" x="2832" y="6432" width="64" height="64" rotation="-51.1944"/>
+  <object id="855" name="Wall" x="2896" y="4848" width="64" height="64" rotation="-10.397"/>
+  <object id="856" name="Car1" x="5056" y="4096" width="64" height="64" rotation="-299.271"/>
+  <object id="857" name="Car1" x="6608" y="4320" width="64" height="64" rotation="-73.0167"/>
+  <object id="858" name="Car1" x="7696" y="3472" width="64" height="64" rotation="-296.555"/>
+  <object id="859" name="Car1" x="6736" y="2592" width="64" height="64" rotation="-2.20163"/>
+  <object id="860" name="Car1" x="3872" y="2688" width="64" height="64" rotation="-263.638"/>
+  <object id="861" name="Car2" x="5104" y="2704" width="64" height="64"/>
+  <object id="862" name="Car2" x="6464" y="4384" width="64" height="64" rotation="-187.94"/>
+  <object id="863" name="Car2" x="5840" y="4592" width="64" height="64"/>
+  <object id="864" name="Car2" x="3152" y="4608" width="64" height="64" rotation="27.2724"/>
+  <object id="865" name="Car2" x="2192" y="4368" width="64" height="64" rotation="-204.487"/>
+  <object id="866" name="Car2" x="3088" y="7360" width="64" height="64"/>
+  <object id="867" name="Car2" x="7536" y="5872" width="64" height="64" rotation="-73.6518"/>
+  <object id="868" name="Car2" x="8784" y="4304" width="64" height="64" rotation="-120.466"/>
+  <object id="869" name="Car2" x="2992" y="3264" width="64" height="64"/>
+  <object id="870" name="Car2" x="5264" y="3392" width="64" height="64" rotation="-28.9183"/>
+  <object id="871" name="Car3" x="3771.36" y="4282.56" width="64" height="64" rotation="-80.9443"/>
+  <object id="872" name="Car3" x="2000" y="4352" width="64" height="64" rotation="-379.823"/>
+  <object id="873" name="Car3" x="1808" y="4560" width="64" height="64" rotation="-136.563"/>
+  <object id="874" name="Car3" x="6976" y="4528" width="64" height="64" rotation="-83.4323"/>
+  <object id="875" name="Car3" x="5440.11" y="4320.11" width="64" height="64" rotation="-90.2039"/>
+  <object id="876" name="Car3" x="4528" y="2720" width="64" height="64" rotation="-121.43"/>
+  <object id="877" name="Car3" x="6912" y="3376" width="64" height="64" rotation="-115.491"/>
+  <object id="878" name="Car3" x="5984" y="7392" width="64" height="64" rotation="-83.4323"/>
+  <object id="879" name="Car4" x="5312" y="6656" width="64" height="64"/>
+  <object id="880" name="Car4" x="4960" y="4768" width="64" height="64"/>
+  <object id="881" name="Wall" x="2944" y="5888" width="64" height="64"/>
+  <object id="882" name="Car4" x="3280" y="4192" width="64" height="64" rotation="-85.58"/>
+  <object id="883" name="Car4" x="1600" y="4208" width="64" height="64" rotation="40.8965"/>
+  <object id="884" name="Car4" x="7632" y="2528" width="64" height="64" rotation="-322.844"/>
+  <object id="885" name="Car4" x="5997.2" y="2621.43" width="64" height="64" rotation="-274.817"/>
+  <object id="886" name="Car5" x="6151.96" y="4473.66" width="64" height="64" rotation="12.9176"/>
+  <object id="887" name="Wall" x="3856" y="4528" width="64" height="64" rotation="-9.54842"/>
+  <object id="888" name="Car5" x="2816" y="4400" width="64" height="64" rotation="-38.6569"/>
+  <object id="889" name="Car2" x="2928" y="4384" width="64" height="64" rotation="-147.273"/>
+  <object id="890" name="Car5" x="5008" y="6496" width="64" height="64" rotation="12.9176"/>
+  <object id="891" name="Car5" x="3536" y="7472" width="64" height="64" rotation="-23.4758"/>
+  <object id="893" name="Wall" x="3781.38" y="4219.4" width="64" height="64" rotation="8.97263"/>
+  <object id="897" name="Wall" x="3152" y="4608" width="64" height="64" rotation="27.2724"/>
+  <object id="898" name="Car1" x="2896" y="4848" width="64" height="64" rotation="-10.397"/>
+  <object id="899" name="Wall" x="2816" y="4400" width="64" height="64" rotation="-38.6569"/>
+  <object id="900" name="Wall" x="2928" y="4384" width="64" height="64" rotation="-147.273"/>
+  <object id="901" name="Wall" x="3280" y="4192" width="64" height="64" rotation="-85.58"/>
+  <object id="902" name="Wall" x="5056" y="4096" width="64" height="64" rotation="-299.271"/>
+  <object id="903" name="Wall" x="5440" y="4320" width="64" height="64" rotation="-90.2039"/>
+  <object id="904" name="Wall" x="5410.44" y="4684.9" width="64" height="64" rotation="-2.3598"/>
+  <object id="905" name="Wall" x="5840" y="4592" width="64" height="64"/>
+  <object id="906" name="Wall" x="6151.96" y="4473.66" width="64" height="64" rotation="12.9176"/>
+  <object id="907" name="Wall" x="6464" y="4384" width="64" height="64" rotation="-187.94"/>
+  <object id="908" name="Wall" x="6608" y="4320" width="64" height="64" rotation="-73.0167"/>
+  <object id="909" name="Wall" x="6976" y="4528" width="64" height="64" rotation="-83.4323"/>
+  <object id="910" name="Wall" x="7360" y="4752" width="64" height="64" rotation="-411.101"/>
+  <object id="911" name="Wall" x="8784" y="4304" width="64" height="64" rotation="-120.466"/>
+  <object id="912" name="Wall" x="7696" y="3472" width="64" height="64" rotation="-296.555"/>
+  <object id="913" name="Wall" x="7632" y="2528" width="64" height="64" rotation="-322.844"/>
+  <object id="914" name="Wall" x="6736" y="2592" width="64" height="64" rotation="-2.20163"/>
+  <object id="915" name="Wall" x="6000" y="2624" width="64" height="64" rotation="-274.817"/>
+  <object id="916" name="Wall" x="5104" y="2704" width="64" height="64"/>
+  <object id="917" name="Wall" x="4528" y="2720" width="64" height="64" rotation="-121.43"/>
+  <object id="918" name="Wall" x="3872" y="2688" width="64" height="64" rotation="-263.638"/>
+  <object id="919" name="Wall" x="2992" y="3264" width="64" height="64"/>
+  <object id="920" name="Wall" x="3088" y="7360" width="64" height="64"/>
+  <object id="921" name="Wall" x="2832" y="6432" width="64" height="64" rotation="-51.1944"/>
+  <object id="922" name="Car3" x="2944" y="5888" width="64" height="64"/>
+  <object id="923" name="Wall" x="3536" y="7472" width="64" height="64" rotation="-23.4758"/>
+  <object id="924" name="Wall" x="4128" y="7232" width="64" height="64" rotation="31.9939"/>
+  <object id="925" name="Wall" x="5008" y="6496" width="64" height="64" rotation="12.9176"/>
+  <object id="926" name="Wall" x="5312" y="6656" width="64" height="64"/>
+  <object id="927" name="Wall" x="5984" y="7392" width="64" height="64" rotation="-83.4323"/>
+  <object id="928" name="Wall" x="7136" y="7424" width="64" height="64" rotation="-299.271"/>
+  <object id="929" name="Wall" x="7456" y="6464" width="64" height="64" rotation="-347.195"/>
+  <object id="930" name="Wall" x="7536" y="5872" width="64" height="64" rotation="-73.6518"/>
+  <object id="931" name="Wall" x="2192" y="4368" width="64" height="64" rotation="-204.487"/>
+  <object id="932" name="Wall" x="2000" y="4352" width="64" height="64" rotation="-379.823"/>
+  <object id="933" name="Wall" x="1808" y="4560" width="64" height="64" rotation="-136.563"/>
+  <object id="934" name="Wall" x="1600" y="4208" width="64" height="64" rotation="40.8965"/>
  </objectgroup>
 </map>

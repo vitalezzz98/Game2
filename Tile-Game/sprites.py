@@ -76,6 +76,7 @@ class Player(pg.sprite.Sprite):
         self.ammo = WEAPONS[self.weapon]['ammo']
         self.shooting = False
         self.reloading = False
+        self.flashlight = False
 
     def get_keys(self):
         self.vel = vec(0, 0)
@@ -95,9 +96,6 @@ class Player(pg.sprite.Sprite):
             self.vel[1] *= 0.7071
         if mouse[0]:
             self.shoot()
-        if keys[pg.K_r]:
-            self.current_frame = 0
-            self.reload()
 
     def shoot(self):
         now = pg.time.get_ticks()
@@ -109,7 +107,7 @@ class Player(pg.sprite.Sprite):
                 self.vel = vec(-WEAPONS[self.weapon]['kickback'], 0).rotate(self.game.mouse.angle + 90)
                 for i in range(WEAPONS[self.weapon]['bullet_count']):
                     spread = uniform(-WEAPONS[self.weapon]['spread'], WEAPONS[self.weapon]['spread'])
-                    Bullet(self.game, pos, dir.rotate(spread))
+                    Bullet(self.game, pos, dir.rotate(spread), WEAPONS[self.weapon]['damage'])
                     snd = choice(self.game.weapons_sounds[self.weapon])
                     if snd.get_num_channels() > 2:
                         snd.stop()
@@ -325,7 +323,7 @@ class Mob(pg.sprite.Sprite):
             pg.draw.rect(self.image, col, self.health_bar)
 
 class Bullet(pg.sprite.Sprite):
-    def __init__(self, game, pos, dir):
+    def __init__(self, game, pos, dir, damage):
         self._layer = BULLET_LAYER
         self.groups = game.all_sprites, game.bullets
         pg.sprite.Sprite.__init__(self, self.groups)
@@ -338,6 +336,7 @@ class Bullet(pg.sprite.Sprite):
         #spread = uniform(-GUN_SPREAD, GUN_SPREAD)
         self.vel = dir * (WEAPONS[game.player.weapon]['bullet_speed'] + choice([-15, 0, 15, 30]))
         self.spawn_time = pg.time.get_ticks()
+        self.damage = damage
 
     def update(self):
         self.pos += self.vel * self.game.dt
@@ -403,7 +402,7 @@ class BloodSplashGreen(pg.sprite.Sprite):
 
 class Item(pg.sprite.Sprite):
     def __init__(self, game, pos, type):
-        self_layer = ITEMS_LAYER
+        self._layer = ITEMS_LAYER
         self.groups = game.all_sprites, game.items
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -439,8 +438,22 @@ class Wall(pg.sprite.Sprite):
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
 
+class Object(pg.sprite.Sprite):
+    def __init__(self, game, pos, rotation, type):
+        self._layer = WALL_LAYER
+        self.groups = game.all_sprites, game.objects
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = pg.transform.rotate(game.object_images[type], -rotation % 360)
+        #self.image_copy = pg.transform.rotate(self.image, rotation)
+        self.rect = self.image.get_rect()
+        self.hit_rect = self.rect
+        self.type = type
+        self.pos = pos
+        self.rect.center = pos
+
 class Obstacle(pg.sprite.Sprite):
-    def __init__(self, game, x, y, w, h):
+    def __init__(self, game, x, y, w, h, rotation):
         self._layer = WALL_LAYER
         self.groups = game.walls
         pg.sprite.Sprite.__init__(self, self.groups)
