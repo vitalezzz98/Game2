@@ -123,6 +123,7 @@ class Player(pg.sprite.Sprite):
             self.reloading = True
             if self.ammo >= WEAPONS[self.weapon]['ammo']:
                 snd = choice(self.game.weapon_full_sounds[self.weapon])
+                self.reloading = False
                 if snd.get_num_channels() > 1:
                     snd.stop()
                 snd.play()
@@ -134,7 +135,6 @@ class Player(pg.sprite.Sprite):
             self.last_reload = now
             self.ammo += WEAPONS[self.weapon]['load']
             if self.ammo >= WEAPONS[self.weapon]['ammo']:
-                self.reloading = False
                 self.ammo = WEAPONS[self.weapon]['ammo']
 
     def add_health(self, amount):
