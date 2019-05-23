@@ -8,4 +8,6 @@ To-Do list:
 6. Score
 7. Mob respawn
 8. Pathfinding
-9. ...
+9. Menu controls
+10. Menu options
+11. ...
