@@ -1,0 +1,16 @@
+W or Arrow Up      - Move up
+A or Arrow Left    - Move Left
+D or Arrow Right   - Move Right
+S or Arrow Down    - Move down
+Left mouse button  - Shoot
+R                  - Reload
+Escape             - Pause
+
+
+
+H                  - Debug
+While in debug:
+F1                 - First debug option
+F2                 - Second debug option
+F3                 - Third debug option
+F4                 - Fourth debug option
