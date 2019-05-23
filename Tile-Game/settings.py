@@ -44,6 +44,9 @@ PLAYER_MOVE_IMG = ['surv_move (1).png', 'surv_move (2).png', 'surv_move (3).png'
                     'surv_move (13).png', 'surv_move (14).png', 'surv_move (15).png', 'surv_move (16).png', 'surv_move (17).png', 'surv_move (18).png',
                     'surv_move (19).png', 'surv_move (20).png',]
 PLAYER_SHOOT_IMG = ['surv_shoot (1).png', 'surv_shoot (2).png', 'surv_shoot (3).png']
+PLAYER_RELOAD_IMG = ['surv_reload (1).png', 'surv_reload (2).png', 'surv_reload (3).png', 'surv_reload (4).png', 'surv_reload (5).png', 'surv_reload (6).png',
+                    'surv_reload (7).png', 'surv_reload (8).png', 'surv_reload (9).png', 'surv_reload (10).png', 'surv_reload (11).png', 'surv_reload (12).png',
+                    'surv_reload (13).png', 'surv_reload (14).png', 'surv_reload (15).png']
 PLAYER_SHOTGUN_IDLE_IMG = ['surv_shot_idle (1).png', 'surv_shot_idle (2).png', 'surv_shot_idle (3).png', 'surv_shot_idle (4).png', 'surv_shot_idle (5).png', 'surv_shot_idle (6).png',
                     'surv_shot_idle (7).png', 'surv_shot_idle (8).png', 'surv_shot_idle (9).png', 'surv_shot_idle (10).png', 'surv_shot_idle (11).png', 'surv_shot_idle (12).png',
                     'surv_shot_idle (13).png', 'surv_shot_idle (14).png', 'surv_shot_idle (15).png', 'surv_shot_idle (16).png', 'surv_shot_idle (17).png', 'surv_shot_idle (18).png',
@@ -53,6 +56,10 @@ PLAYER_SHOTGUN_MOVE_IMG = ['surv_shot_move (1).png', 'surv_shot_move (2).png', '
                     'surv_shot_move (13).png', 'surv_shot_move (14).png', 'surv_shot_move (15).png', 'surv_shot_move (16).png', 'surv_shot_move (17).png', 'surv_shot_move (18).png',
                     'surv_shot_move (19).png', 'surv_shot_move (20).png',]
 PLAYER_SHOTGUN_SHOOT_IMG = ['surv_shot_shoot (1).png', 'surv_shot_shoot (2).png', 'surv_shot_shoot (3).png']
+PLAYER_SHOTGUN_RELOAD_IMG = ['surv_shot_reload (1).png', 'surv_shot_reload (2).png', 'surv_shot_reload (3).png', 'surv_shot_reload (4).png', 'surv_shot_reload (5).png', 'surv_shot_reload (6).png',
+                    'surv_shot_reload (7).png', 'surv_shot_reload (8).png', 'surv_shot_reload (9).png', 'surv_shot_reload (10).png', 'surv_shot_reload (11).png', 'surv_shot_reload (12).png',
+                    'surv_shot_reload (13).png', 'surv_shot_reload (14).png', 'surv_shot_reload (15).png', 'surv_shot_reload (16).png', 'surv_shot_reload (17).png', 'surv_shot_reload (18).png',
+                    'surv_shot_reload (19).png', 'surv_shot_reload (20).png']
 PLAYER_HIT_RECT = pg.Rect(0, 0, 35, 35)
 BARREL_OFFSET = vec(30, 14)
 
@@ -68,7 +75,9 @@ WEAPONS['pistol'] = {'bullet_speed': 750,
                      'damage': 10,
                      'bullet_size': 'lg',
                      'bullet_count': 1,
-                     'ammo': 15}
+                     'ammo': 15,
+                     'load': 15,
+                     'rel_time': 3000}
 WEAPONS['shotgun'] = {'bullet_speed': 700,
                       'bullet_lifetime': 1000,
                       'rate': 1000,
@@ -77,7 +86,9 @@ WEAPONS['shotgun'] = {'bullet_speed': 700,
                       'damage': 5,
                       'bullet_size': 'sm',
                       'bullet_count': 12,
-                      'ammo': 7}
+                      'ammo': 7,
+                      'load': 1,
+                      'rel_time': 700}
 
 # Mob settings
 MOB_IDLE_IMG = ['zomb_idle (1).png', 'zomb_idle (2).png', 'zomb_idle (3).png', 'zomb_idle (4).png', 'zomb_idle (5).png', 'zomb_idle (6).png',
@@ -125,7 +136,9 @@ PLAYER_HIT_SOUNDS = ['pain1.wav', 'pain2.wav', 'pain3.wav', 'pain4.wav']
 ZOMBIE_MOAN_SOUNDS = ['zombie_moan1.wav', 'zombie_moan2.wav', 'zombie_moan3.wav', 'zombie_moan4.wav']
 ZOMBIE_HIT_SOUNDS = ['zombie_hit1.wav', 'zombie_hit2.wav', 'zombie_hit3.wav', 'zombie_hit4.wav', 'zombie_hit5.wav']
 WEAPON_RELOADING_SOUNDS = {'pistol': ['pistol_reload.wav'],
-                           'shotgun': ['shotgun_reload.wav']}
+                           'shotgun': ['shotgun_shell_load.wav']}
+WEAPON_FULL_SOUNDS = {'pistol': ['pistol_full.wav'],
+                      'shotgun': ['shotgun_reload.wav']}
 WEAPON_SOUNDS = {'pistol': ['pistol.wav'],
                  'shotgun': ['shotgun.wav']}
 EFFECT_SOUNDS = {'health_up': 'health_pick.wav'}

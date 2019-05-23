@@ -101,6 +101,9 @@ class Game:
         self.player_shoots = []
         for img in PLAYER_SHOOT_IMG:
             self.player_shoots.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
+        self.player_reloads = []
+        for img in PLAYER_RELOAD_IMG:
+            self.player_reloads.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
         self.player_shotgun_idles = []
         for img in PLAYER_SHOTGUN_IDLE_IMG:
             self.player_shotgun_idles.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
@@ -110,6 +113,9 @@ class Game:
         self.player_shotgun_shoots = []
         for img in PLAYER_SHOTGUN_SHOOT_IMG:
             self.player_shotgun_shoots.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
+        self.player_shotgun_reloads = []
+        for img in PLAYER_SHOTGUN_RELOAD_IMG:
+            self.player_shotgun_reloads.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
         self.mob_idles = []
         for img in MOB_IDLE_IMG:
             self.mob_idles.append(pg.image.load(path.join(zombie_img_folder, img)).convert_alpha())
@@ -151,6 +157,13 @@ class Game:
                 s = pg.mixer.Sound(path.join(snd_folder, snd))
                 s.set_volume(SOUNDS_VOLUME)
                 self.weapons_reload_sounds[weapon].append(s)
+        self.weapon_full_sounds = {}
+        for weapon in WEAPON_FULL_SOUNDS:
+            self.weapon_full_sounds[weapon] = []
+            for snd in WEAPON_FULL_SOUNDS[weapon]:
+                s = pg.mixer.Sound(path.join(snd_folder, snd))
+                s.set_volume(SOUNDS_VOLUME)
+                self.weapon_full_sounds[weapon].append(s)
         self.zombie_moan_sounds = []
         for snd in ZOMBIE_MOAN_SOUNDS:
             s = pg.mixer.Sound(path.join(snd_folder, snd))
@@ -279,7 +292,7 @@ class Game:
                 if self.draw_debug_3:
                     self.draw_text('Mouse World X, Y: ' + str(pg.mouse.get_pos()), self.font, 22, WHITE, 10, 120, align='nw')
                 if self.draw_debug_4:
-                    self.draw_text('Player shooting: ' + str(self.player.shooting), self.font, 22, WHITE, 10, 150, align='nw')
+                    self.draw_text(str(self.player.current_frame), self.font, 22, WHITE, 10, 150, align='nw')
         if self.draw_debug:
             for wall in self.walls:
                 pg.draw.rect(self.screen, CYAN, self.camera.apply_rect(wall.rect), 1)
