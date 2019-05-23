@@ -7,4 +7,5 @@ To-Do list:
 5. Ammo system
 6. Score
 7. Mob respawn
-8. ...
+8. Pathfinding
+9. ...
