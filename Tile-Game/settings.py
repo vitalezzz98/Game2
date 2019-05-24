@@ -87,7 +87,7 @@ WEAPONS['shotgun'] = {'bullet_speed': 700,
                       'bullet_size': 'sm',
                       'bullet_count': 12,
                       'ammo': 7,
-                      'totalammo': 7,
+                      'totalammo': 49,
                       'load': 1,
                       'rel_time': 700}
 

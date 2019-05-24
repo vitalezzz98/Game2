@@ -285,6 +285,7 @@ class Game:
                 hit.kill()
                 self.effects_sounds['health_up'].play()
                 self.player.weapon = 'shotgun'
+                self.player.ammo = WEAPONS[self.player.weapon]['ammo']
         # zombie hit player
         hits = pg.sprite.spritecollide(self.player, self.mobs, False, collide_hit_rect)
         for hit in hits:
