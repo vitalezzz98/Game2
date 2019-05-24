@@ -4,10 +4,11 @@ D or Arrow Right   - Move Right
 S or Arrow Down    - Move down
 Left mouse button  - Shoot
 R                  - Reload
+F                  - Flashlight
 Escape             - Pause
 
 
-
+N                  - Night mode
 H                  - Debug
 While in debug:
 F1                 - First debug option

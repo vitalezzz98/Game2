@@ -27,12 +27,14 @@ def collide_with_walls(sprite, group, dir):
             sprite.hit_rect.centery = sprite.pos.y
 
 class Mouse(pg.sprite.Sprite):
-    def __init__(self, game, x, y):
+    def __init__(self, game, x, y, type):
         self._layer = PLAYER_LAYER
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
-        self.image = pg.Surface([10, 10], pg.SRCALPHA, 32)
-        self.image = self.image.convert_alpha()
+        self.type = type
+        self.image = game.crosshair_pistol
+        self.image_copy = self.image
+        #self.image = self.image.convert_alpha()
         self.rect = self.image.get_rect()
         self.game = game
         self.pos = self.game.camera.reverse(pg.mouse.get_pos())
@@ -48,6 +50,9 @@ class Mouse(pg.sprite.Sprite):
         self.y = self.pos[1] - self.game.player.pos.y
         self.angle = math.atan2(self.x, self.y)
         self.angle = (180 / math.pi) * (-self.angle)
+        self.image = pg.transform.rotate(self.image_copy, -self.angle)
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos + CROSSHAIR_OFFSET.rotate(self.angle + 90)
         self.hit_rect = self.rect
 
 class Player(pg.sprite.Sprite):
@@ -76,6 +81,10 @@ class Player(pg.sprite.Sprite):
         self.ammo = WEAPONS[self.weapon]['ammo']
         self.shooting = False
         self.reloading = False
+        self.flashlight = False
+        self.have_shotgun = False
+        self.have_rifle = False
+        self.weapon_name = ''
 
     def get_keys(self):
         self.vel = vec(0, 0)
@@ -93,11 +102,17 @@ class Player(pg.sprite.Sprite):
         if self.vel[0] != 0 and self.vel[1] != 0:
             self.vel[0] *= 0.7071
             self.vel[1] *= 0.7071
-        if mouse[0]:
+        if mouse[0] and not self.reloading:
             self.shoot()
-        if keys[pg.K_r]:
-            self.current_frame = 0
-            self.reload()
+        if keys[pg.K_1]:
+            self.weapon = 'pistol'
+            self.ammo = WEAPONS[self.weapon]['ammo']
+        if keys[pg.K_2] and self.have_shotgun:
+            self.weapon = 'shotgun'
+            self.ammo = WEAPONS[self.weapon]['ammo']
+        if keys[pg.K_3] and self.have_rifle:
+            self.weapon = 'rifle'
+            self.ammo = WEAPONS[self.weapon]['ammo']
 
     def shoot(self):
         now = pg.time.get_ticks()
@@ -106,10 +121,10 @@ class Player(pg.sprite.Sprite):
                 self.last_shot = now
                 dir = vec(1, 0).rotate(self.game.mouse.angle + 90)
                 pos = self.pos + BARREL_OFFSET.rotate(self.game.mouse.angle + 90)
-                self.vel = vec(-WEAPONS[self.weapon]['kickback'], 0).rotate(self.game.mouse.angle + 90)
+                #self.vel = vec(-WEAPONS[self.weapon]['kickback'], 0).rotate(self.game.mouse.angle + 90)
                 for i in range(WEAPONS[self.weapon]['bullet_count']):
                     spread = uniform(-WEAPONS[self.weapon]['spread'], WEAPONS[self.weapon]['spread'])
-                    Bullet(self.game, pos, dir.rotate(spread))
+                    Bullet(self.game, pos, dir.rotate(spread), WEAPONS[self.weapon]['damage'])
                     snd = choice(self.game.weapons_sounds[self.weapon])
                     if snd.get_num_channels() > 2:
                         snd.stop()
@@ -119,7 +134,7 @@ class Player(pg.sprite.Sprite):
 
     def reload(self):
         now = pg.time.get_ticks()
-        if now - self.last_reload > WEAPONS[self.weapon]['rel_time']:
+        if now - self.last_reload > WEAPONS[self.weapon]['rel_time'] and WEAPONS[self.weapon]['totalammo'] > 0:
             self.reloading = True
             if self.ammo >= WEAPONS[self.weapon]['ammo']:
                 snd = choice(self.game.weapon_full_sounds[self.weapon])
@@ -133,9 +148,47 @@ class Player(pg.sprite.Sprite):
                     snd.stop()
                 snd.play()
             self.last_reload = now
-            self.ammo += WEAPONS[self.weapon]['load']
-            if self.ammo >= WEAPONS[self.weapon]['ammo']:
-                self.ammo = WEAPONS[self.weapon]['ammo']
+            if WEAPONS[self.weapon]['totalammo'] > 0:
+                if self.weapon == 'pistol':
+                    if WEAPONS[self.weapon]['totalammo'] < WEAPONS[self.weapon]['ammo'] - self.ammo:
+                        lowammo = WEAPONS[self.weapon]['totalammo']
+                        self.ammo += lowammo
+                        WEAPONS[self.weapon]['totalammo'] -= WEAPONS[self.weapon]['ammo'] - self.ammo
+                    elif WEAPONS[self.weapon]['totalammo'] == WEAPONS[self.weapon]['ammo'] - self.ammo:
+                        lowammo = WEAPONS[self.weapon]['totalammo']
+                        self.ammo += lowammo
+                        WEAPONS[self.weapon]['totalammo'] -= lowammo
+                    else:
+                        WEAPONS[self.weapon]['totalammo'] -= WEAPONS[self.weapon]['ammo'] - self.ammo
+                        self.ammo += WEAPONS[self.weapon]['load']
+                    if WEAPONS[self.weapon]['totalammo'] < 0:
+                        WEAPONS[self.weapon]['totalammo'] = 0
+                    if self.ammo >= WEAPONS[self.weapon]['ammo']:
+                        self.ammo = WEAPONS[self.weapon]['ammo']
+                if self.weapon == 'rifle':
+                    if WEAPONS[self.weapon]['totalammo'] < WEAPONS[self.weapon]['ammo'] - self.ammo:
+                        lowammo = WEAPONS[self.weapon]['totalammo']
+                        self.ammo += lowammo
+                        WEAPONS[self.weapon]['totalammo'] -= WEAPONS[self.weapon]['ammo'] - self.ammo
+                    elif WEAPONS[self.weapon]['totalammo'] == WEAPONS[self.weapon]['ammo'] - self.ammo:
+                        lowammo = WEAPONS[self.weapon]['totalammo']
+                        self.ammo += lowammo
+                        WEAPONS[self.weapon]['totalammo'] -= lowammo
+                    else:
+                        WEAPONS[self.weapon]['totalammo'] -= WEAPONS[self.weapon]['ammo'] - self.ammo
+                        self.ammo += WEAPONS[self.weapon]['load']
+                    if WEAPONS[self.weapon]['totalammo'] < 0:
+                        WEAPONS[self.weapon]['totalammo'] = 0
+                    if self.ammo >= WEAPONS[self.weapon]['ammo']:
+                        self.ammo = WEAPONS[self.weapon]['ammo']
+                if self.weapon == 'shotgun':
+                    if WEAPONS[self.weapon]['totalammo'] > 0 and self.ammo < WEAPONS[self.weapon]['ammo']:
+                        self.ammo += WEAPONS[self.weapon]['load']
+                        WEAPONS[self.weapon]['totalammo'] -= WEAPONS[self.weapon]['load']
+                    elif WEAPONS[self.weapon]['totalammo'] <= 0:
+                        WEAPONS[self.weapon]['totalammo'] = 0
+                    if self.ammo >= WEAPONS[self.weapon]['ammo']:
+                        self.ammo = WEAPONS[self.weapon]['ammo']
 
     def add_health(self, amount):
         self.health += amount
@@ -156,6 +209,8 @@ class Player(pg.sprite.Sprite):
             self.shooting = True
         now = pg.time.get_ticks()
         if self.weapon == 'pistol':
+            self.game.mouse.image_copy = self.game.crosshair_pistol
+            self.weapon_name = 'Handgun'
             if self.standing:
                 if now - self.last_update > 50:
                     self.last_update = now
@@ -168,7 +223,7 @@ class Player(pg.sprite.Sprite):
                     self.current_frame = (self.current_frame + 1) % len(self.game.player_moves)
                     self.image = pg.transform.scale(self.game.player_moves[self.current_frame], (64, 55))
                     self.image_copy = pg.transform.rotate(self.image, 270)
-            if self.shooting and self.ammo > 0:
+            if self.shooting and self.ammo > 0 and not self.reloading:
                 if now - self.last_update > 150:
                     self.last_update = now
                     self.current_frame = (self.current_frame + 1) % len(self.game.player_shoots)
@@ -185,6 +240,8 @@ class Player(pg.sprite.Sprite):
                     if self.current_frame == len(self.game.player_reloads) - 1:
                         self.reloading = False
         elif self.weapon == 'shotgun':
+            self.game.mouse.image_copy = self.game.crosshair_shotgun
+            self.weapon_name = 'Shotgun'
             if self.standing:
                 if now - self.last_update > 50:
                     self.last_update = now
@@ -197,7 +254,7 @@ class Player(pg.sprite.Sprite):
                     self.current_frame = (self.current_frame + 1) % len(self.game.player_shotgun_moves)
                     self.image = pg.transform.scale(self.game.player_shotgun_moves[self.current_frame], (64, 55))
                     self.image_copy = pg.transform.rotate(self.image, 270)
-            if self.shooting and self.ammo > 0:
+            if self.shooting and self.ammo > 0 and not self.reloading:
                 if now - self.last_update > 150:
                     self.last_update = now
                     self.current_frame = (self.current_frame + 1) % len(self.game.player_shotgun_shoots)
@@ -212,6 +269,37 @@ class Player(pg.sprite.Sprite):
                     self.image = pg.transform.scale(self.game.player_shotgun_reloads[self.current_frame], (65, 58))
                     self.image_copy = pg.transform.rotate(self.image, 270)
                     if self.current_frame == len(self.game.player_reloads) - 1:
+                        self.reloading = False
+        elif self.weapon == 'rifle':
+            self.game.mouse.image_copy = self.game.crosshair_rifle
+            self.weapon_name = 'Rifle'
+            if self.standing:
+                if now - self.last_update > 50:
+                    self.last_update = now
+                    self.current_frame = (self.current_frame + 1) % len(self.game.player_rifle_idles)
+                    self.image = pg.transform.scale(self.game.player_rifle_idles[self.current_frame], (64, 55))
+                    self.image_copy = pg.transform.rotate(self.image, 270)
+            if self.moving:
+                if now - self.last_update > 20:
+                    self.last_update = now
+                    self.current_frame = (self.current_frame + 1) % len(self.game.player_rifle_moves)
+                    self.image = pg.transform.scale(self.game.player_rifle_moves[self.current_frame], (64, 55))
+                    self.image_copy = pg.transform.rotate(self.image, 270)
+            if self.shooting and self.ammo > 0 and not self.reloading:
+                if now - self.last_update > 50:
+                    self.last_update = now
+                    self.current_frame = (self.current_frame + 1) % len(self.game.player_rifle_shoots)
+                    self.image = pg.transform.scale(self.game.player_rifle_shoots[self.current_frame], (64, 55))
+                    self.image_copy = pg.transform.rotate(self.image, 270)
+                    if not mouse[0] and self.current_frame == len(self.game.player_rifle_shoots) - 1:
+                        self.shooting = False
+            if self.reloading:
+                if now - self.last_update > 120:
+                    self.last_update = now
+                    self.current_frame = (self.current_frame + 1) % len(self.game.player_rifle_reloads)
+                    self.image = pg.transform.scale(self.game.player_rifle_reloads[self.current_frame], (65, 58))
+                    self.image_copy = pg.transform.rotate(self.image, 270)
+                    if self.current_frame == len(self.game.player_rifle_reloads) - 1:
                         self.reloading = False
         self.get_keys()
         self.image = pg.transform.rotate(self.image_copy, int(-self.game.mouse.angle))
@@ -325,7 +413,7 @@ class Mob(pg.sprite.Sprite):
             pg.draw.rect(self.image, col, self.health_bar)
 
 class Bullet(pg.sprite.Sprite):
-    def __init__(self, game, pos, dir):
+    def __init__(self, game, pos, dir, damage):
         self._layer = BULLET_LAYER
         self.groups = game.all_sprites, game.bullets
         pg.sprite.Sprite.__init__(self, self.groups)
@@ -338,6 +426,7 @@ class Bullet(pg.sprite.Sprite):
         #spread = uniform(-GUN_SPREAD, GUN_SPREAD)
         self.vel = dir * (WEAPONS[game.player.weapon]['bullet_speed'] + choice([-15, 0, 15, 30]))
         self.spawn_time = pg.time.get_ticks()
+        self.damage = damage
 
     def update(self):
         self.pos += self.vel * self.game.dt
@@ -403,7 +492,7 @@ class BloodSplashGreen(pg.sprite.Sprite):
 
 class Item(pg.sprite.Sprite):
     def __init__(self, game, pos, type):
-        self_layer = ITEMS_LAYER
+        self._layer = ITEMS_LAYER
         self.groups = game.all_sprites, game.items
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -439,8 +528,22 @@ class Wall(pg.sprite.Sprite):
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
 
+class Object(pg.sprite.Sprite):
+    def __init__(self, game, pos, rotation, type):
+        self._layer = WALL_LAYER
+        self.groups = game.all_sprites, game.objects
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = pg.transform.rotate(game.object_images[type], -rotation % 360)
+        #self.image_copy = pg.transform.rotate(self.image, rotation)
+        self.rect = self.image.get_rect()
+        self.hit_rect = self.rect
+        self.type = type
+        self.pos = pos
+        self.rect.center = pos
+
 class Obstacle(pg.sprite.Sprite):
-    def __init__(self, game, x, y, w, h):
+    def __init__(self, game, x, y, w, h, rotation):
         self._layer = WALL_LAYER
         self.groups = game.walls
         pg.sprite.Sprite.__init__(self, self.groups)
