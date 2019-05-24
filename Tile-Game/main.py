@@ -86,6 +86,9 @@ class Game:
         self.dim_screen.fill((0, 0, 0, 180))
         self.menu_image = pg.image.load(path.join(img_folder, MENU_IMAGE)).convert_alpha()
         self.menu_image = pg.transform.scale(self.menu_image, (1000, 625))
+        self.crosshair_image = {}
+        for img in CROSSHAIRS:
+            self.crosshair_image[img] = pg.image.load(path.join(img_folder, CROSSHAIRS[img])).convert_alpha()
         self.bullet_images = {}
         self.bullet_images['lg'] = pg.image.load(path.join(img_folder, BULLET_IMG)).convert_alpha()
         self.bullet_images['sm'] = pg.image.load(path.join(img_folder, BULLET_SHOTGUN_IMG)).convert_alpha()
@@ -247,7 +250,8 @@ class Game:
             if tile_object.name in ['Car1', 'Car2', 'Car3', 'Car4', 'Car5']:
                 Object(self, obj_center, tile_object.rotation, tile_object.name)
         self.camera = Camera(self.map.width, self.map.height)
-        self.mouse = Mouse(self, self.player.pos.x, self.player.pos.y)
+        self.mouse = Mouse(self, self.player.pos.x, self.player.pos.y, self.player.weapon)
+        pg.mouse.set_visible(False)
         self.draw_debug = False
         self.draw_debug_1 = False
         self.draw_debug_2 = False
@@ -286,6 +290,7 @@ class Game:
                 self.effects_sounds['health_up'].play()
                 self.player.weapon = 'shotgun'
                 self.player.ammo = WEAPONS[self.player.weapon]['ammo']
+                self.mouse.image_copy = self.crosshair_image[self.player.weapon]
         # zombie hit player
         hits = pg.sprite.spritecollide(self.player, self.mobs, False, collide_hit_rect)
         for hit in hits:
@@ -337,6 +342,7 @@ class Game:
             if self.draw_debug:
                 pg.draw.rect(self.screen, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
                 pg.draw.rect(self.screen, CYAN, self.camera.apply_rect(sprite.rect), 1)
+                pg.draw.rect(self.screen, CYAN, self.mouse.rect, 1)
                 if self.draw_debug_1:
                     self.draw_text('Mouse Screen X, Y: ' + str(pg.mouse.get_pos()), self.font, 22, WHITE, 10, 60, align='nw')
                 if self.draw_debug_2:
@@ -386,6 +392,7 @@ class Game:
                     self.player.flashlight = not self.player.flashlight
 
     def show_start_screen(self):
+        pg.mouse.set_visible(True)
         if pg.mixer.Channel(0).get_busy() == False and pg.mixer.Channel(1).get_busy() == False:
             self.menu_music.play()
             self.menu_radio.play()
@@ -415,6 +422,7 @@ class Game:
         self.wait_for_key()
 
     def show_go_screen(self):
+        pg.mouse.set_visible(True)
         self.screen.fill(BLACK)
         pg.mixer.music.stop()
         self.end_music.play()
@@ -427,6 +435,7 @@ class Game:
         self.wait_for_key()
 
     def show_settings_screen(self):
+        pg.mouse.set_visible(True)
         if self.night:
             self.night_text = 'Yes'
         else:
@@ -442,9 +451,11 @@ class Game:
         #pg.draw.rect(self.screen, CYAN, self.button_setnight_rect, 1)
         pg.display.flip()
         self.settings = True
+        self.menu = False
         self.wait_for_key()
 
     def show_credits_screen(self):
+        pg.mouse.set_visible(True)
         self.screen.fill(BLACK)
         self.screen.blit(self.menu_image, (0, 0))
         self.draw_text("HOPELESS", self.font, 120, RED, WIDTH - 260, 100, align="center")
@@ -463,9 +474,11 @@ class Game:
         #pg.draw.rect(self.screen, CYAN, self.button_backcred_rect, 1)
         pg.display.flip()
         self.credits = True
+        self.menu = False
         self.wait_for_key()
 
     def show_controls_screen(self):
+        pg.mouse.set_visible(True)
         self.screen.fill(BLACK)
         self.screen.blit(self.menu_image, (0, 0))
         self.draw_text("HOPELESS", self.font, 120, RED, WIDTH - 260, 100, align="center")
@@ -482,6 +495,7 @@ class Game:
         #pg.draw.rect(self.screen, CYAN, self.button_backcont_rect, 1)
         pg.display.flip()
         self.controls = True
+        self.menu = False
         self.wait_for_key()
 
     def wait_for_key(self):

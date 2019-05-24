@@ -27,12 +27,13 @@ def collide_with_walls(sprite, group, dir):
             sprite.hit_rect.centery = sprite.pos.y
 
 class Mouse(pg.sprite.Sprite):
-    def __init__(self, game, x, y):
+    def __init__(self, game, x, y, type):
         self._layer = PLAYER_LAYER
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
-        self.image = pg.Surface([10, 10], pg.SRCALPHA, 32)
-        self.image = self.image.convert_alpha()
+        self.image = game.crosshair_image[type]
+        self.image_copy = self.image
+        #self.image = self.image.convert_alpha()
         self.rect = self.image.get_rect()
         self.game = game
         self.pos = self.game.camera.reverse(pg.mouse.get_pos())
@@ -48,6 +49,9 @@ class Mouse(pg.sprite.Sprite):
         self.y = self.pos[1] - self.game.player.pos.y
         self.angle = math.atan2(self.x, self.y)
         self.angle = (180 / math.pi) * (-self.angle)
+        self.image = pg.transform.rotate(self.image_copy, -self.angle)
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos + CROSSHAIR_OFFSET.rotate(self.angle + 90)
         self.hit_rect = self.rect
 
 class Player(pg.sprite.Sprite):

@@ -117,6 +117,11 @@ LIGHT_IMG = 'light2.png'
 WORLD_LIGHT_IMG = 'light.png'
 LIGHT_RADIUS = (600, 600)
 NIGHT_COLOR = (20, 20, 20)
+CROSSHAIR_PISTOL = 'crosshair012.png'
+CROSSHAIR_SHOTGUN = 'crosshair020.png'
+CROSSHAIRS = {'pistol': 'crosshair012.png',
+              'shotgun': 'crosshair020.png'}
+CROSSHAIR_OFFSET = vec(0, 14)
 
 # Layers
 WALL_LAYER = 1
