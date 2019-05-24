@@ -4,6 +4,7 @@
 # Smoke Particles by Kenney.nl
 # Player model by rileygombart
 # Zombie model by rileygombart
+# Weapon sprites by Game Developer Studio
 # Player sounds by Michel Baradari
 # Shots sounds by Michel Baradari
 # Shotgun reloading sounds by Mike Koenig
@@ -86,12 +87,13 @@ class Game:
         self.dim_screen.fill((0, 0, 0, 180))
         self.menu_image = pg.image.load(path.join(img_folder, MENU_IMAGE)).convert_alpha()
         self.menu_image = pg.transform.scale(self.menu_image, (1000, 625))
-        self.crosshair_image = {}
-        for img in CROSSHAIRS:
-            self.crosshair_image[img] = pg.image.load(path.join(img_folder, CROSSHAIRS[img])).convert_alpha()
+        self.crosshair_pistol = pg.image.load(path.join(img_folder, CROSSHAIR_PISTOL)).convert_alpha()
+        self.crosshair_shotgun = pg.image.load(path.join(img_folder, CROSSHAIR_SHOTGUN)).convert_alpha()
+        self.crosshair_rifle = pg.image.load(path.join(img_folder, CROSSHAIR_RIFLE)).convert_alpha()
         self.bullet_images = {}
-        self.bullet_images['lg'] = pg.image.load(path.join(img_folder, BULLET_IMG)).convert_alpha()
+        self.bullet_images['lg'] = pg.image.load(path.join(img_folder, BULLET_RIFLE_IMG)).convert_alpha()
         self.bullet_images['sm'] = pg.image.load(path.join(img_folder, BULLET_SHOTGUN_IMG)).convert_alpha()
+        self.bullet_images['md'] = pg.image.load(path.join(img_folder, BULLET_IMG)).convert_alpha()
         self.player_idles = []
         for img in PLAYER_IDLE_IMG:
             self.player_idles.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
@@ -116,6 +118,18 @@ class Game:
         self.player_shotgun_reloads = []
         for img in PLAYER_SHOTGUN_RELOAD_IMG:
             self.player_shotgun_reloads.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
+        self.player_rifle_idles = []
+        for img in PLAYER_RIFLE_IDLE_IMG:
+            self.player_rifle_idles.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
+        self.player_rifle_moves = []
+        for img in PLAYER_RIFLE_MOVE_IMG:
+            self.player_rifle_moves.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
+        self.player_rifle_shoots = []
+        for img in PLAYER_RIFLE_SHOOT_IMG:
+            self.player_rifle_shoots.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
+        self.player_rifle_reloads = []
+        for img in PLAYER_RIFLE_RELOAD_IMG:
+            self.player_rifle_reloads.append(pg.image.load(path.join(player_img_folder, img)).convert_alpha())
         self.mob_idles = []
         for img in MOB_IDLE_IMG:
             self.mob_idles.append(pg.image.load(path.join(zombie_img_folder, img)).convert_alpha())
@@ -159,6 +173,8 @@ class Game:
         self.effects_sounds = {}
         for type in EFFECT_SOUNDS:
             self.effects_sounds[type] = pg.mixer.Sound(path.join(snd_folder, EFFECT_SOUNDS[type]))
+        self.weapon_empty_sound = pg.mixer.Sound(path.join(snd_folder, WEAPON_EMPTY))
+        self.weapon_empty_sound.set_volume(SOUNDS_VOLUME)
         self.weapons_sounds = {}
         for weapon in WEAPON_SOUNDS:
             self.weapons_sounds[weapon] = []
@@ -210,6 +226,7 @@ class Game:
         self.button_settings_surf = pg.Surface((200, 50), pg.SRCALPHA, 32)
         self.button_controls_surf = pg.Surface((180, 50), pg.SRCALPHA, 32)
         self.button_credits_surf = pg.Surface((180, 50), pg.SRCALPHA, 32)
+        self.button_pausemen_surf = pg.Surface((180, 50), pg.SRCALPHA, 32)
         self.button_backset_surf = pg.Surface((100, 50), pg.SRCALPHA, 32)
         self.button_backcred_surf = pg.Surface((100, 50), pg.SRCALPHA, 32)
         self.button_backcont_surf = pg.Surface((100, 50), pg.SRCALPHA, 32)
@@ -220,10 +237,11 @@ class Game:
         self.button_settings_rect = self.button_settings_surf.get_rect(center=(WIDTH - 260, 340))
         self.button_controls_rect = self.button_controls_surf.get_rect(center=(WIDTH - 260, 400))
         self.button_credits_rect = self.button_credits_surf.get_rect(center=(WIDTH - 260, 460))
+        self.button_pausemen_rect = self.button_pausemen_surf.get_rect(center=(WIDTH / 2, HEIGHT - 150))
         self.button_backset_rect = self.button_backset_surf.get_rect(center=(WIDTH - 260, 520))
-        self.button_backcred_rect = self.button_backcred_surf.get_rect(center=(WIDTH - 260, 540))
+        self.button_backcred_rect = self.button_backcred_surf.get_rect(center=(WIDTH - 260, 560))
         self.button_setnight_rect = self.button_setnight_surf.get_rect(center=(WIDTH - 260, 220))
-        self.button_backcont_rect = self.button_backcont_surf.get_rect(center=(WIDTH - 260, 540))
+        self.button_backcont_rect = self.button_backcont_surf.get_rect(center=(WIDTH - 260, 580))
 
     def new(self):
         # initialize all variables and do all the setup for a new game
@@ -245,7 +263,7 @@ class Game:
                 Mob(self, obj_center.x, obj_center.y)
             if tile_object.name == 'Wall':
                 Obstacle(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height, tile_object.rotation)
-            if tile_object.name in ['Health', 'Shotgun']:
+            if tile_object.name in ['Health', 'Shotgun', 'Rifle', 'AmmoPistol', 'AmmoShotgun', 'AmmoRifle']:
                 Item(self, obj_center, tile_object.name)
             if tile_object.name in ['Car1', 'Car2', 'Car3', 'Car4', 'Car5']:
                 Object(self, obj_center, tile_object.rotation, tile_object.name)
@@ -289,8 +307,28 @@ class Game:
                 hit.kill()
                 self.effects_sounds['health_up'].play()
                 self.player.weapon = 'shotgun'
+                self.player.have_shotgun = True
                 self.player.ammo = WEAPONS[self.player.weapon]['ammo']
-                self.mouse.image_copy = self.crosshair_image[self.player.weapon]
+                #self.mouse.image = self.crosshair_image[self.player.weapon]
+            if hit.type == 'Rifle':
+                hit.kill()
+                self.effects_sounds['health_up'].play()
+                self.player.weapon = 'rifle'
+                self.player.have_rifle = True
+                self.player.ammo = WEAPONS[self.player.weapon]['ammo']
+                #self.mouse.image = self.crosshair_image[self.player.weapon]
+            if hit.type == 'AmmoPistol':
+                hit.kill()
+                self.effects_sounds['health_up'].play()
+                WEAPONS['pistol']['totalammo'] += WEAPONS['pistol']['ammo']
+            if hit.type == 'AmmoShotgun':
+                hit.kill()
+                self.effects_sounds['health_up'].play()
+                WEAPONS['shotgun']['totalammo'] += WEAPONS['shotgun']['ammo']
+            if hit.type == 'AmmoRifle':
+                hit.kill()
+                self.effects_sounds['health_up'].play()
+                WEAPONS['rifle']['totalammo'] += WEAPONS['rifle']['ammo']
         # zombie hit player
         hits = pg.sprite.spritecollide(self.player, self.mobs, False, collide_hit_rect)
         for hit in hits:
@@ -358,11 +396,22 @@ class Game:
             self.render_fog()
         # HUD draw
         draw_player_health(self.screen, 10, 10, self.player.health / PLAYER_HEALTH)
+        self.draw_text(str(self.player.weapon_name), self.font, 25, WHITE, WIDTH - 100, HEIGHT - 80, align='center')
         self.draw_text(str(self.player.ammo) + ' / ' + str(WEAPONS[self.player.weapon]['totalammo']), self.font, 25, WHITE, WIDTH - 100, HEIGHT - 50, align='center')
         self.draw_text('Zombies: {}'.format(len(self.mobs)), self.font, 22, WHITE, WIDTH - 10, 10, align='ne')
         if self.paused:
+            mouse = pg.mouse.get_pressed()
+            mouse_pos = pg.mouse.get_pos()
+            pg.mouse.set_visible(True)
             self.screen.blit(self.dim_screen, (0, 0))
             self.draw_text("Paused", self.font, 105, DARK_RED, WIDTH / 2, HEIGHT / 2, align="center")
+            self.draw_text("Menu", self.font, 30, WHITE, WIDTH / 2, HEIGHT - 150, align="center")
+            self.button_pausemen = self.screen.blit(self.button_pausemen_surf, self.button_pausemen_rect)
+            #pg.draw.rect(self.screen, CYAN, self.button_pausemen_rect, 1)
+            if mouse[0] and self.button_pausemen.collidepoint(mouse_pos):
+                self.playing = False
+        if not self.paused:
+            pg.mouse.set_visible(False)
         pg.display.flip()
 
     def events(self):
@@ -385,11 +434,13 @@ class Game:
                     self.draw_debug_3 = not self.draw_debug_3
                 if event.key == pg.K_F4:
                     self.draw_debug_4 = not self.draw_debug_4
-                if event.key == pg.K_r:
+                if event.key == pg.K_r and not self.player.reloading:
                     self.player.current_frame = 0
                     self.player.reload()
                 if event.key == pg.K_f:
                     self.player.flashlight = not self.player.flashlight
+            if event.type == pg.MOUSEBUTTONDOWN and self.player.ammo == 0:
+                self.weapon_empty_sound.play()
 
     def show_start_screen(self):
         pg.mouse.set_visible(True)
@@ -465,11 +516,12 @@ class Game:
         self.draw_text("Smoke Particles by Kenney.nl", self.font, 25, WHITE, WIDTH - 260, 310, align="center")
         self.draw_text("Player and zombie sprites by rileygombart", self.font, 25, WHITE, WIDTH - 260, 340, align="center")
         self.draw_text("Player and shot sounds by Michel Baradari", self.font, 25, WHITE, WIDTH - 260, 370, align="center")
-        self.draw_text("Shotgun sounds by Mike Koenig", self.font, 25, WHITE, WIDTH - 260, 400, align="center")
-        self.draw_text("Pistol reloading sounds by Gary - fossilrecords.net", self.font, 25, WHITE, WIDTH - 260, 430, align="center")
-        self.draw_text("Zombie and inventory sounds by artisticdude", self.font, 25, WHITE, WIDTH - 260, 460, align="center")
-        self.draw_text("Post apocalypse soundtrack by Alexandr Zhelanov", self.font, 25, WHITE, WIDTH - 260, 490, align="center")
-        self.draw_text("Back", self.font, 35, WHITE, WIDTH - 260, 540, align="center")
+        self.draw_text("Weapon sprites by Game Developer Studio", self.font, 25, WHITE, WIDTH - 260, 400, align="center")
+        self.draw_text("Shotgun sounds by Mike Koenig", self.font, 25, WHITE, WIDTH - 260, 430, align="center")
+        self.draw_text("Pistol reloading sounds by Gary - fossilrecords.net", self.font, 25, WHITE, WIDTH - 260, 460, align="center")
+        self.draw_text("Zombie and inventory sounds by artisticdude", self.font, 25, WHITE, WIDTH - 260, 490, align="center")
+        self.draw_text("Post apocalypse soundtrack by Alexandr Zhelanov", self.font, 25, WHITE, WIDTH - 260, 520, align="center")
+        self.draw_text("Back", self.font, 35, WHITE, WIDTH - 260, 560, align="center")
         self.button_backcred = self.screen.blit(self.button_backcred_surf, self.button_backcred_rect)
         #pg.draw.rect(self.screen, CYAN, self.button_backcred_rect, 1)
         pg.display.flip()
@@ -489,8 +541,11 @@ class Game:
         self.draw_text("LMB  -  Shoot", self.font, 25, WHITE, WIDTH - 330, 340, align="w")
         self.draw_text("R  -  Reload", self.font, 25, WHITE, WIDTH - 330, 370, align="w")
         self.draw_text("F  -  Flashlight", self.font, 25, WHITE, WIDTH - 330, 400, align="w")
-        self.draw_text("ESC  -  Pause", self.font, 25, WHITE, WIDTH - 330, 430, align="w")
-        self.draw_text("Back", self.font, 35, WHITE, WIDTH - 260, 540, align="center")
+        self.draw_text("1  -  Pistol", self.font, 25, WHITE, WIDTH - 330, 430, align="w")
+        self.draw_text("2  -  Shotgun", self.font, 25, WHITE, WIDTH - 330, 460, align="w")
+        self.draw_text("3  -  Rifle", self.font, 25, WHITE, WIDTH - 330, 490, align="w")
+        self.draw_text("ESC  -  Pause", self.font, 25, WHITE, WIDTH - 330, 520, align="w")
+        self.draw_text("Back", self.font, 35, WHITE, WIDTH - 260, 580, align="center")
         self.button_backcont = self.screen.blit(self.button_backcont_surf, self.button_backcont_rect)
         #pg.draw.rect(self.screen, CYAN, self.button_backcont_rect, 1)
         pg.display.flip()

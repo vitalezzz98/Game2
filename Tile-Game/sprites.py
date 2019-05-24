@@ -31,7 +31,8 @@ class Mouse(pg.sprite.Sprite):
         self._layer = PLAYER_LAYER
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
-        self.image = game.crosshair_image[type]
+        self.type = type
+        self.image = game.crosshair_pistol
         self.image_copy = self.image
         #self.image = self.image.convert_alpha()
         self.rect = self.image.get_rect()
@@ -81,6 +82,9 @@ class Player(pg.sprite.Sprite):
         self.shooting = False
         self.reloading = False
         self.flashlight = False
+        self.have_shotgun = False
+        self.have_rifle = False
+        self.weapon_name = ''
 
     def get_keys(self):
         self.vel = vec(0, 0)
@@ -100,6 +104,15 @@ class Player(pg.sprite.Sprite):
             self.vel[1] *= 0.7071
         if mouse[0] and not self.reloading:
             self.shoot()
+        if keys[pg.K_1]:
+            self.weapon = 'pistol'
+            self.ammo = WEAPONS[self.weapon]['ammo']
+        if keys[pg.K_2] and self.have_shotgun:
+            self.weapon = 'shotgun'
+            self.ammo = WEAPONS[self.weapon]['ammo']
+        if keys[pg.K_3] and self.have_rifle:
+            self.weapon = 'rifle'
+            self.ammo = WEAPONS[self.weapon]['ammo']
 
     def shoot(self):
         now = pg.time.get_ticks()
@@ -108,7 +121,7 @@ class Player(pg.sprite.Sprite):
                 self.last_shot = now
                 dir = vec(1, 0).rotate(self.game.mouse.angle + 90)
                 pos = self.pos + BARREL_OFFSET.rotate(self.game.mouse.angle + 90)
-                self.vel = vec(-WEAPONS[self.weapon]['kickback'], 0).rotate(self.game.mouse.angle + 90)
+                #self.vel = vec(-WEAPONS[self.weapon]['kickback'], 0).rotate(self.game.mouse.angle + 90)
                 for i in range(WEAPONS[self.weapon]['bullet_count']):
                     spread = uniform(-WEAPONS[self.weapon]['spread'], WEAPONS[self.weapon]['spread'])
                     Bullet(self.game, pos, dir.rotate(spread), WEAPONS[self.weapon]['damage'])
@@ -152,6 +165,22 @@ class Player(pg.sprite.Sprite):
                         WEAPONS[self.weapon]['totalammo'] = 0
                     if self.ammo >= WEAPONS[self.weapon]['ammo']:
                         self.ammo = WEAPONS[self.weapon]['ammo']
+                if self.weapon == 'rifle':
+                    if WEAPONS[self.weapon]['totalammo'] < WEAPONS[self.weapon]['ammo'] - self.ammo:
+                        lowammo = WEAPONS[self.weapon]['totalammo']
+                        self.ammo += lowammo
+                        WEAPONS[self.weapon]['totalammo'] -= WEAPONS[self.weapon]['ammo'] - self.ammo
+                    elif WEAPONS[self.weapon]['totalammo'] == WEAPONS[self.weapon]['ammo'] - self.ammo:
+                        lowammo = WEAPONS[self.weapon]['totalammo']
+                        self.ammo += lowammo
+                        WEAPONS[self.weapon]['totalammo'] -= lowammo
+                    else:
+                        WEAPONS[self.weapon]['totalammo'] -= WEAPONS[self.weapon]['ammo'] - self.ammo
+                        self.ammo += WEAPONS[self.weapon]['load']
+                    if WEAPONS[self.weapon]['totalammo'] < 0:
+                        WEAPONS[self.weapon]['totalammo'] = 0
+                    if self.ammo >= WEAPONS[self.weapon]['ammo']:
+                        self.ammo = WEAPONS[self.weapon]['ammo']
                 if self.weapon == 'shotgun':
                     if WEAPONS[self.weapon]['totalammo'] > 0 and self.ammo < WEAPONS[self.weapon]['ammo']:
                         self.ammo += WEAPONS[self.weapon]['load']
@@ -180,6 +209,8 @@ class Player(pg.sprite.Sprite):
             self.shooting = True
         now = pg.time.get_ticks()
         if self.weapon == 'pistol':
+            self.game.mouse.image_copy = self.game.crosshair_pistol
+            self.weapon_name = 'Handgun'
             if self.standing:
                 if now - self.last_update > 50:
                     self.last_update = now
@@ -209,6 +240,8 @@ class Player(pg.sprite.Sprite):
                     if self.current_frame == len(self.game.player_reloads) - 1:
                         self.reloading = False
         elif self.weapon == 'shotgun':
+            self.game.mouse.image_copy = self.game.crosshair_shotgun
+            self.weapon_name = 'Shotgun'
             if self.standing:
                 if now - self.last_update > 50:
                     self.last_update = now
@@ -236,6 +269,37 @@ class Player(pg.sprite.Sprite):
                     self.image = pg.transform.scale(self.game.player_shotgun_reloads[self.current_frame], (65, 58))
                     self.image_copy = pg.transform.rotate(self.image, 270)
                     if self.current_frame == len(self.game.player_reloads) - 1:
+                        self.reloading = False
+        elif self.weapon == 'rifle':
+            self.game.mouse.image_copy = self.game.crosshair_rifle
+            self.weapon_name = 'Rifle'
+            if self.standing:
+                if now - self.last_update > 50:
+                    self.last_update = now
+                    self.current_frame = (self.current_frame + 1) % len(self.game.player_rifle_idles)
+                    self.image = pg.transform.scale(self.game.player_rifle_idles[self.current_frame], (64, 55))
+                    self.image_copy = pg.transform.rotate(self.image, 270)
+            if self.moving:
+                if now - self.last_update > 20:
+                    self.last_update = now
+                    self.current_frame = (self.current_frame + 1) % len(self.game.player_rifle_moves)
+                    self.image = pg.transform.scale(self.game.player_rifle_moves[self.current_frame], (64, 55))
+                    self.image_copy = pg.transform.rotate(self.image, 270)
+            if self.shooting and self.ammo > 0 and not self.reloading:
+                if now - self.last_update > 50:
+                    self.last_update = now
+                    self.current_frame = (self.current_frame + 1) % len(self.game.player_rifle_shoots)
+                    self.image = pg.transform.scale(self.game.player_rifle_shoots[self.current_frame], (64, 55))
+                    self.image_copy = pg.transform.rotate(self.image, 270)
+                    if not mouse[0] and self.current_frame == len(self.game.player_rifle_shoots) - 1:
+                        self.shooting = False
+            if self.reloading:
+                if now - self.last_update > 120:
+                    self.last_update = now
+                    self.current_frame = (self.current_frame + 1) % len(self.game.player_rifle_reloads)
+                    self.image = pg.transform.scale(self.game.player_rifle_reloads[self.current_frame], (65, 58))
+                    self.image_copy = pg.transform.rotate(self.image, 270)
+                    if self.current_frame == len(self.game.player_rifle_reloads) - 1:
                         self.reloading = False
         self.get_keys()
         self.image = pg.transform.rotate(self.image_copy, int(-self.game.mouse.angle))
