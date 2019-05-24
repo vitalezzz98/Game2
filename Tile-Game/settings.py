@@ -75,6 +75,7 @@ WEAPONS['pistol'] = {'bullet_speed': 750,
                      'bullet_size': 'lg',
                      'bullet_count': 1,
                      'ammo': 15,
+                     'totalammo': 120,
                      'load': 15,
                      'rel_time': 3000}
 WEAPONS['shotgun'] = {'bullet_speed': 700,
@@ -86,6 +87,7 @@ WEAPONS['shotgun'] = {'bullet_speed': 700,
                       'bullet_size': 'sm',
                       'bullet_count': 12,
                       'ammo': 7,
+                      'totalammo': 7,
                       'load': 1,
                       'rel_time': 700}
 
@@ -112,7 +114,8 @@ BLOOD_SPLASHES_RED = ['bloodsplats_0003.png', 'bloodsplats_0004.png', 'bloodspla
 BLOOD_SPLASHES_GREEN = ['bloodZ_0003.png', 'bloodZ_0004.png', 'bloodZ_0006.png']
 BLOOD_DURATION = 20000
 LIGHT_IMG = 'light2.png'
-LIGHT_RADIUS = (500, 500)
+WORLD_LIGHT_IMG = 'light.png'
+LIGHT_RADIUS = (600, 600)
 NIGHT_COLOR = (20, 20, 20)
 
 # Layers
@@ -136,12 +139,14 @@ OBJECT_IMAGES = {'Car1': 'car_black_1.png',
                  'Car2': 'car_blue_2.png',
                  'Car3': 'car_red_3.png',
                  'Car4': 'car_yellow_4.png',
-                 'Car5': 'car_green_5.png'
+                 'Car5': 'car_green_5.png',
+                 'Light': 'light.png'
                 }
 
 # Sounds
+#'Kim.WeLeft.ogg'
 BG_MUSIC = ['City.ogg', 'Myst.ogg', 'Road.ogg', 'Travel_0.ogg', 'Vault_0.ogg']
-MENU_MUSIC = ['Kim.WeLeft.ogg', 'Setelment.ogg']
+MENU_MUSIC = ['Setelment.ogg']
 END_MUSIC = 'Alert_0.ogg'
 RADIO = 'radio.ogg'
 PLAYER_HIT_SOUNDS = ['pain1.wav', 'pain2.wav', 'pain3.wav', 'pain4.wav']

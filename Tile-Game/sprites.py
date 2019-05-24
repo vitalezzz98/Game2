@@ -94,7 +94,7 @@ class Player(pg.sprite.Sprite):
         if self.vel[0] != 0 and self.vel[1] != 0:
             self.vel[0] *= 0.7071
             self.vel[1] *= 0.7071
-        if mouse[0]:
+        if mouse[0] and not self.reloading:
             self.shoot()
 
     def shoot(self):
@@ -117,7 +117,7 @@ class Player(pg.sprite.Sprite):
 
     def reload(self):
         now = pg.time.get_ticks()
-        if now - self.last_reload > WEAPONS[self.weapon]['rel_time']:
+        if now - self.last_reload > WEAPONS[self.weapon]['rel_time'] and WEAPONS[self.weapon]['totalammo'] > 0:
             self.reloading = True
             if self.ammo >= WEAPONS[self.weapon]['ammo']:
                 snd = choice(self.game.weapon_full_sounds[self.weapon])
@@ -131,9 +131,31 @@ class Player(pg.sprite.Sprite):
                     snd.stop()
                 snd.play()
             self.last_reload = now
-            self.ammo += WEAPONS[self.weapon]['load']
-            if self.ammo >= WEAPONS[self.weapon]['ammo']:
-                self.ammo = WEAPONS[self.weapon]['ammo']
+            if WEAPONS[self.weapon]['totalammo'] > 0:
+                if self.weapon == 'pistol':
+                    if WEAPONS[self.weapon]['totalammo'] < WEAPONS[self.weapon]['ammo'] - self.ammo:
+                        lowammo = WEAPONS[self.weapon]['totalammo']
+                        self.ammo += lowammo
+                        WEAPONS[self.weapon]['totalammo'] -= WEAPONS[self.weapon]['ammo'] - self.ammo
+                    elif WEAPONS[self.weapon]['totalammo'] == WEAPONS[self.weapon]['ammo'] - self.ammo:
+                        lowammo = WEAPONS[self.weapon]['totalammo']
+                        self.ammo += lowammo
+                        WEAPONS[self.weapon]['totalammo'] -= lowammo
+                    else:
+                        WEAPONS[self.weapon]['totalammo'] -= WEAPONS[self.weapon]['ammo'] - self.ammo
+                        self.ammo += WEAPONS[self.weapon]['load']
+                    if WEAPONS[self.weapon]['totalammo'] < 0:
+                        WEAPONS[self.weapon]['totalammo'] = 0
+                    if self.ammo >= WEAPONS[self.weapon]['ammo']:
+                        self.ammo = WEAPONS[self.weapon]['ammo']
+                if self.weapon == 'shotgun':
+                    if WEAPONS[self.weapon]['totalammo'] > 0 and self.ammo < WEAPONS[self.weapon]['ammo']:
+                        self.ammo += WEAPONS[self.weapon]['load']
+                        WEAPONS[self.weapon]['totalammo'] -= WEAPONS[self.weapon]['load']
+                    elif WEAPONS[self.weapon]['totalammo'] <= 0:
+                        WEAPONS[self.weapon]['totalammo'] = 0
+                    if self.ammo >= WEAPONS[self.weapon]['ammo']:
+                        self.ammo = WEAPONS[self.weapon]['ammo']
 
     def add_health(self, amount):
         self.health += amount
@@ -166,7 +188,7 @@ class Player(pg.sprite.Sprite):
                     self.current_frame = (self.current_frame + 1) % len(self.game.player_moves)
                     self.image = pg.transform.scale(self.game.player_moves[self.current_frame], (64, 55))
                     self.image_copy = pg.transform.rotate(self.image, 270)
-            if self.shooting and self.ammo > 0:
+            if self.shooting and self.ammo > 0 and not self.reloading:
                 if now - self.last_update > 150:
                     self.last_update = now
                     self.current_frame = (self.current_frame + 1) % len(self.game.player_shoots)
@@ -195,7 +217,7 @@ class Player(pg.sprite.Sprite):
                     self.current_frame = (self.current_frame + 1) % len(self.game.player_shotgun_moves)
                     self.image = pg.transform.scale(self.game.player_shotgun_moves[self.current_frame], (64, 55))
                     self.image_copy = pg.transform.rotate(self.image, 270)
-            if self.shooting and self.ammo > 0:
+            if self.shooting and self.ammo > 0 and not self.reloading:
                 if now - self.last_update > 150:
                     self.last_update = now
                     self.current_frame = (self.current_frame + 1) % len(self.game.player_shotgun_shoots)

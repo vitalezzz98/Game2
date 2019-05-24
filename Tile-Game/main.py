@@ -195,13 +195,32 @@ class Game:
 
         self.go = False
         self.menu = False
+        self.settings = False
+        self.credits = False
+        self.controls = False
+        self.night_text = 'No'
+        self.night = False
 
-        self.button1_surf = pg.Surface((270, 70), pg.SRCALPHA, 32)
-        self.button2_surf = pg.Surface((100, 50), pg.SRCALPHA, 32)
-        self.button3_surf = pg.Surface((100, 50), pg.SRCALPHA, 32)
-        self.button1_rect = self.button1_surf.get_rect(center=(WIDTH - 260, 220))
-        self.button2_rect = self.button2_surf.get_rect(center=(WIDTH - 260, HEIGHT - 200))
-        self.button3_rect = self.button3_surf.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 100))
+        self.button_newgame_surf = pg.Surface((230, 50), pg.SRCALPHA, 32)
+        self.button_quit_surf = pg.Surface((100, 50), pg.SRCALPHA, 32)
+        self.button_backmenu_surf = pg.Surface((100, 50), pg.SRCALPHA, 32)
+        self.button_settings_surf = pg.Surface((200, 50), pg.SRCALPHA, 32)
+        self.button_controls_surf = pg.Surface((180, 50), pg.SRCALPHA, 32)
+        self.button_credits_surf = pg.Surface((180, 50), pg.SRCALPHA, 32)
+        self.button_backset_surf = pg.Surface((100, 50), pg.SRCALPHA, 32)
+        self.button_backcred_surf = pg.Surface((100, 50), pg.SRCALPHA, 32)
+        self.button_backcont_surf = pg.Surface((100, 50), pg.SRCALPHA, 32)
+        self.button_setnight_surf = pg.Surface((230, 50), pg.SRCALPHA, 32)
+        self.button_newgame_rect = self.button_newgame_surf.get_rect(center=(WIDTH - 260, 220))
+        self.button_quit_rect = self.button_quit_surf.get_rect(center=(WIDTH - 260, 520))
+        self.button_backmenu_rect = self.button_backmenu_surf.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 100))
+        self.button_settings_rect = self.button_settings_surf.get_rect(center=(WIDTH - 260, 340))
+        self.button_controls_rect = self.button_controls_surf.get_rect(center=(WIDTH - 260, 400))
+        self.button_credits_rect = self.button_credits_surf.get_rect(center=(WIDTH - 260, 460))
+        self.button_backset_rect = self.button_backset_surf.get_rect(center=(WIDTH - 260, 520))
+        self.button_backcred_rect = self.button_backcred_surf.get_rect(center=(WIDTH - 260, 540))
+        self.button_setnight_rect = self.button_setnight_surf.get_rect(center=(WIDTH - 260, 220))
+        self.button_backcont_rect = self.button_backcont_surf.get_rect(center=(WIDTH - 260, 540))
 
     def new(self):
         # initialize all variables and do all the setup for a new game
@@ -235,7 +254,6 @@ class Game:
         self.draw_debug_3 = False
         self.draw_debug_4 = False
         self.paused = False
-        self.night = False
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -333,7 +351,7 @@ class Game:
             self.render_fog()
         # HUD draw
         draw_player_health(self.screen, 10, 10, self.player.health / PLAYER_HEALTH)
-        self.draw_text('Ammo: ' + str(self.player.ammo), self.font, 22, WHITE, WIDTH / 2, 20, align='center')
+        self.draw_text(str(self.player.ammo) + ' / ' + str(WEAPONS[self.player.weapon]['totalammo']), self.font, 25, WHITE, WIDTH - 100, HEIGHT - 50, align='center')
         self.draw_text('Zombies: {}'.format(len(self.mobs)), self.font, 22, WHITE, WIDTH - 10, 10, align='ne')
         if self.paused:
             self.screen.blit(self.dim_screen, (0, 0))
@@ -367,19 +385,32 @@ class Game:
                     self.player.flashlight = not self.player.flashlight
 
     def show_start_screen(self):
-        now = pg.time.get_ticks()
-        self.menu_music.play()
-        self.menu_radio.play()
+        if pg.mixer.Channel(0).get_busy() == False and pg.mixer.Channel(1).get_busy() == False:
+            self.menu_music.play()
+            self.menu_radio.play()
+        self.screen.fill(BLACK)
         self.screen.blit(self.menu_image, (0, 0))
         self.draw_text("HOPELESS", self.font, 120, RED, WIDTH - 260, 100, align="center")
         self.draw_text("New game", self.font, 50, WHITE, WIDTH - 260, 220, align="center")
-        self.draw_text("Quit", self.font, 50, WHITE, WIDTH - 260, HEIGHT - 200, align="center")
-        self.button1 = self.screen.blit(self.button1_surf, self.button1_rect)
-        self.button2 = self.screen.blit(self.button2_surf, self.button2_rect)
-        #pg.draw.rect(self.screen, CYAN, self.button1_rect, 1)
-        #pg.draw.rect(self.screen, CYAN, self.button2_rect, 1)
+        self.draw_text("Continue", self.font, 50, DARKGREY, WIDTH - 260, 280, align="center")
+        self.draw_text("Settings", self.font, 50, WHITE, WIDTH - 260, 340, align="center")
+        self.draw_text("Controls", self.font, 50, WHITE, WIDTH - 260, 400, align="center")
+        self.draw_text("Credits", self.font, 50, WHITE, WIDTH - 260, 460, align="center")
+        self.draw_text("Quit", self.font, 50, WHITE, WIDTH - 260, 520, align="center")
+        self.button_newgame = self.screen.blit(self.button_newgame_surf, self.button_newgame_rect)
+        self.button_quit = self.screen.blit(self.button_quit_surf, self.button_quit_rect)
+        self.button_settings = self.screen.blit(self.button_settings_surf, self.button_settings_rect)
+        self.button_controls = self.screen.blit(self.button_controls_surf, self.button_controls_rect)
+        self.button_credits = self.screen.blit(self.button_credits_surf, self.button_credits_rect)
+        pg.draw.rect(self.screen, CYAN, self.button_newgame_rect, 1)
+        pg.draw.rect(self.screen, CYAN, self.button_quit_rect, 1)
+        pg.draw.rect(self.screen, CYAN, self.button_settings_rect, 1)
+        pg.draw.rect(self.screen, CYAN, self.button_controls_rect, 1)
+        pg.draw.rect(self.screen, CYAN, self.button_credits_rect, 1)
         pg.display.flip()
         self.menu = True
+        self.settings = False
+        self.credits = False
         self.wait_for_key()
 
     def show_go_screen(self):
@@ -388,10 +419,68 @@ class Game:
         self.end_music.play()
         self.draw_text("GAME OVER", self.font, 100, RED, WIDTH / 2, HEIGHT / 2, align="center")
         self.draw_text("Menu", self.font, 50, WHITE, WIDTH / 2, HEIGHT / 2 + 100, align="center")
-        self.button3 = self.screen.blit(self.button3_surf, self.button3_rect)
-        #pg.draw.rect(self.screen, CYAN, self.button3_rect, 1)
+        self.button_backmenu = self.screen.blit(self.button_backmenu_surf, self.button_backmenu_rect)
+        pg.draw.rect(self.screen, CYAN, self.button_backmenu_rect, 1)
         pg.display.flip()
         self.go = True
+        self.wait_for_key()
+
+    def show_settings_screen(self):
+        if self.night:
+            self.night_text = 'Yes'
+        else:
+            self.night_text = 'No'
+        self.screen.fill(BLACK)
+        self.screen.blit(self.menu_image, (0, 0))
+        self.draw_text("HOPELESS", self.font, 120, RED, WIDTH - 260, 100, align="center")
+        self.draw_text("Night mode: " + self.night_text, self.font, 35, WHITE, WIDTH - 260, 220, align="center")
+        self.draw_text("Back", self.font, 35, WHITE, WIDTH - 260, 520, align="center")
+        self.button_backset = self.screen.blit(self.button_backset_surf, self.button_backset_rect)
+        self.button_setnight = self.screen.blit(self.button_setnight_surf, self.button_setnight_rect)
+        pg.draw.rect(self.screen, CYAN, self.button_backset_rect, 1)
+        pg.draw.rect(self.screen, CYAN, self.button_setnight_rect, 1)
+        pg.display.flip()
+        self.settings = True
+        self.wait_for_key()
+
+    def show_credits_screen(self):
+        self.screen.fill(BLACK)
+        self.screen.blit(self.menu_image, (0, 0))
+        self.draw_text("HOPELESS", self.font, 120, RED, WIDTH - 260, 100, align="center")
+        self.draw_text("Game by Vitalez", self.font, 30, WHITE, WIDTH - 260, 220, align="center")
+        self.draw_text("Top down tiles pack by Kenney.nl", self.font, 25, WHITE, WIDTH - 260, 250, align="center")
+        self.draw_text("Particles pack by Kenney.nl", self.font, 25, WHITE, WIDTH - 260, 280, align="center")
+        self.draw_text("Smoke Particles by Kenney.nl", self.font, 25, WHITE, WIDTH - 260, 310, align="center")
+        self.draw_text("Player and zombie sprites by rileygombart", self.font, 25, WHITE, WIDTH - 260, 340, align="center")
+        self.draw_text("Player and shot sounds by Michel Baradari", self.font, 25, WHITE, WIDTH - 260, 370, align="center")
+        self.draw_text("Shotgun sounds by Mike Koenig", self.font, 25, WHITE, WIDTH - 260, 400, align="center")
+        self.draw_text("Pistol reloading sounds by Gary - fossilrecords.net", self.font, 25, WHITE, WIDTH - 260, 430, align="center")
+        self.draw_text("Zombie and inventory sounds by artisticdude", self.font, 25, WHITE, WIDTH - 260, 460, align="center")
+        self.draw_text("Post apocalypse soundtrack by Alexandr Zhelanov", self.font, 25, WHITE, WIDTH - 260, 490, align="center")
+        self.draw_text("Back", self.font, 35, WHITE, WIDTH - 260, 540, align="center")
+        self.button_backcred = self.screen.blit(self.button_backcred_surf, self.button_backcred_rect)
+        pg.draw.rect(self.screen, CYAN, self.button_backcred_rect, 1)
+        pg.display.flip()
+        self.credits = True
+        self.wait_for_key()
+
+    def show_controls_screen(self):
+        self.screen.fill(BLACK)
+        self.screen.blit(self.menu_image, (0, 0))
+        self.draw_text("HOPELESS", self.font, 120, RED, WIDTH - 260, 100, align="center")
+        self.draw_text("W  -  Move up", self.font, 30, WHITE, WIDTH - 330, 220, align="w")
+        self.draw_text("S  -  Move down", self.font, 25, WHITE, WIDTH - 330, 250, align="w")
+        self.draw_text("A  -  Move left", self.font, 25, WHITE, WIDTH - 330, 280, align="w")
+        self.draw_text("D  -  Move right", self.font, 25, WHITE, WIDTH - 330, 310, align="w")
+        self.draw_text("LMB  -  Shoot", self.font, 25, WHITE, WIDTH - 330, 340, align="w")
+        self.draw_text("R  -  Reload", self.font, 25, WHITE, WIDTH - 330, 370, align="w")
+        self.draw_text("F  -  Flashlight", self.font, 25, WHITE, WIDTH - 330, 400, align="w")
+        self.draw_text("ESC  -  Pause", self.font, 25, WHITE, WIDTH - 330, 430, align="w")
+        self.draw_text("Back", self.font, 35, WHITE, WIDTH - 260, 540, align="center")
+        self.button_backcont = self.screen.blit(self.button_backcont_surf, self.button_backcont_rect)
+        pg.draw.rect(self.screen, CYAN, self.button_backcont_rect, 1)
+        pg.display.flip()
+        self.controls = True
         self.wait_for_key()
 
     def wait_for_key(self):
@@ -405,15 +494,43 @@ class Game:
                 if event.type == pg.QUIT:
                     waiting = False
                     self.quit()
-                if self.menu and mouse[0] and self.button1.collidepoint(mouse_pos):
+                if self.menu and mouse[0] and self.button_newgame.collidepoint(mouse_pos):
                     waiting = False
                     self.menu_music.fadeout(2500)
                     self.menu_radio.fadeout(2500)
                     self.menu = False
-                if self.menu and mouse[0] and self.button2.collidepoint(mouse_pos):
+                if self.menu and mouse[0] and self.button_quit.collidepoint(mouse_pos):
                     waiting = False
                     self.quit()
-                if self.go and mouse[0] and self.button3.collidepoint(mouse_pos):
+                if self.menu and mouse[0] and self.button_settings.collidepoint(mouse_pos):
+                    waiting = False
+                    self.menu = False
+                    self.show_settings_screen()
+                if self.menu and mouse[0] and self.button_credits.collidepoint(mouse_pos):
+                    waiting = False
+                    self.menu = False
+                    self.show_credits_screen()
+                if self.menu and mouse[0] and self.button_controls.collidepoint(mouse_pos):
+                    waiting = False
+                    self.menu = False
+                    self.show_controls_screen()
+                if self.controls and mouse[0] and self.button_backcont.collidepoint(mouse_pos):
+                    waiting = False
+                    self.show_start_screen()
+                    self.controls = False
+                if self.settings and mouse[0] and self.button_setnight.collidepoint(mouse_pos):
+                    self.night = not self.night
+                    waiting = False
+                    self.show_settings_screen()
+                if self.settings and mouse[0] and self.button_backset.collidepoint(mouse_pos):
+                    waiting = False
+                    self.show_start_screen()
+                    self.settings = False
+                elif self.credits and mouse[0] and self.button_backcred.collidepoint(mouse_pos):
+                    waiting = False
+                    self.show_start_screen()
+                    self.credits = False
+                if self.go and mouse[0] and self.button_backmenu.collidepoint(mouse_pos):
                     self.end_music.fadeout(1000)
                     waiting = False
                     self.go = False
