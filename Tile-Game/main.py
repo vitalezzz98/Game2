@@ -402,11 +402,11 @@ class Game:
         self.button_settings = self.screen.blit(self.button_settings_surf, self.button_settings_rect)
         self.button_controls = self.screen.blit(self.button_controls_surf, self.button_controls_rect)
         self.button_credits = self.screen.blit(self.button_credits_surf, self.button_credits_rect)
-        pg.draw.rect(self.screen, CYAN, self.button_newgame_rect, 1)
-        pg.draw.rect(self.screen, CYAN, self.button_quit_rect, 1)
-        pg.draw.rect(self.screen, CYAN, self.button_settings_rect, 1)
-        pg.draw.rect(self.screen, CYAN, self.button_controls_rect, 1)
-        pg.draw.rect(self.screen, CYAN, self.button_credits_rect, 1)
+        #pg.draw.rect(self.screen, CYAN, self.button_newgame_rect, 1)
+        #pg.draw.rect(self.screen, CYAN, self.button_quit_rect, 1)
+        #pg.draw.rect(self.screen, CYAN, self.button_settings_rect, 1)
+        #pg.draw.rect(self.screen, CYAN, self.button_controls_rect, 1)
+        #pg.draw.rect(self.screen, CYAN, self.button_credits_rect, 1)
         pg.display.flip()
         self.menu = True
         self.settings = False
@@ -420,7 +420,7 @@ class Game:
         self.draw_text("GAME OVER", self.font, 100, RED, WIDTH / 2, HEIGHT / 2, align="center")
         self.draw_text("Menu", self.font, 50, WHITE, WIDTH / 2, HEIGHT / 2 + 100, align="center")
         self.button_backmenu = self.screen.blit(self.button_backmenu_surf, self.button_backmenu_rect)
-        pg.draw.rect(self.screen, CYAN, self.button_backmenu_rect, 1)
+        #pg.draw.rect(self.screen, CYAN, self.button_backmenu_rect, 1)
         pg.display.flip()
         self.go = True
         self.wait_for_key()
@@ -437,8 +437,8 @@ class Game:
         self.draw_text("Back", self.font, 35, WHITE, WIDTH - 260, 520, align="center")
         self.button_backset = self.screen.blit(self.button_backset_surf, self.button_backset_rect)
         self.button_setnight = self.screen.blit(self.button_setnight_surf, self.button_setnight_rect)
-        pg.draw.rect(self.screen, CYAN, self.button_backset_rect, 1)
-        pg.draw.rect(self.screen, CYAN, self.button_setnight_rect, 1)
+        #pg.draw.rect(self.screen, CYAN, self.button_backset_rect, 1)
+        #pg.draw.rect(self.screen, CYAN, self.button_setnight_rect, 1)
         pg.display.flip()
         self.settings = True
         self.wait_for_key()
@@ -459,7 +459,7 @@ class Game:
         self.draw_text("Post apocalypse soundtrack by Alexandr Zhelanov", self.font, 25, WHITE, WIDTH - 260, 490, align="center")
         self.draw_text("Back", self.font, 35, WHITE, WIDTH - 260, 540, align="center")
         self.button_backcred = self.screen.blit(self.button_backcred_surf, self.button_backcred_rect)
-        pg.draw.rect(self.screen, CYAN, self.button_backcred_rect, 1)
+        #pg.draw.rect(self.screen, CYAN, self.button_backcred_rect, 1)
         pg.display.flip()
         self.credits = True
         self.wait_for_key()
@@ -478,7 +478,7 @@ class Game:
         self.draw_text("ESC  -  Pause", self.font, 25, WHITE, WIDTH - 330, 430, align="w")
         self.draw_text("Back", self.font, 35, WHITE, WIDTH - 260, 540, align="center")
         self.button_backcont = self.screen.blit(self.button_backcont_surf, self.button_backcont_rect)
-        pg.draw.rect(self.screen, CYAN, self.button_backcont_rect, 1)
+        #pg.draw.rect(self.screen, CYAN, self.button_backcont_rect, 1)
         pg.display.flip()
         self.controls = True
         self.wait_for_key()
