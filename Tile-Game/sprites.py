@@ -79,6 +79,9 @@ class Player(pg.sprite.Sprite):
         self.health = PLAYER_HEALTH
         self.weapon = 'pistol'
         self.ammo = WEAPONS[self.weapon]['ammo']
+        self.ammo_pistol = WEAPONS['pistol']['ammo']
+        self.ammo_shotgun = WEAPONS['shotgun']['ammo']
+        self.ammo_rifle = WEAPONS['rifle']['ammo']
         self.shooting = False
         self.reloading = False
         self.flashlight = False
@@ -106,13 +109,13 @@ class Player(pg.sprite.Sprite):
             self.shoot()
         if keys[pg.K_1]:
             self.weapon = 'pistol'
-            self.ammo = WEAPONS[self.weapon]['ammo']
+            self.ammo = WEAPONS[self.weapon]['cur_ammo']
         if keys[pg.K_2] and self.have_shotgun:
             self.weapon = 'shotgun'
-            self.ammo = WEAPONS[self.weapon]['ammo']
+            self.ammo = WEAPONS[self.weapon]['cur_ammo']
         if keys[pg.K_3] and self.have_rifle:
             self.weapon = 'rifle'
-            self.ammo = WEAPONS[self.weapon]['ammo']
+            self.ammo = WEAPONS[self.weapon]['cur_ammo']
 
     def shoot(self):
         now = pg.time.get_ticks()
@@ -130,6 +133,7 @@ class Player(pg.sprite.Sprite):
                         snd.stop()
                     snd.play()
                 self.ammo -= 1
+                WEAPONS[self.weapon]['cur_ammo'] = self.ammo
                 MuzzleFlash(self.game, pos)
 
     def reload(self):
@@ -154,41 +158,51 @@ class Player(pg.sprite.Sprite):
                         lowammo = WEAPONS[self.weapon]['totalammo']
                         self.ammo += lowammo
                         WEAPONS[self.weapon]['totalammo'] -= WEAPONS[self.weapon]['ammo'] - self.ammo
+                        WEAPONS[self.weapon]['cur_ammo'] = self.ammo
                     elif WEAPONS[self.weapon]['totalammo'] == WEAPONS[self.weapon]['ammo'] - self.ammo:
                         lowammo = WEAPONS[self.weapon]['totalammo']
                         self.ammo += lowammo
                         WEAPONS[self.weapon]['totalammo'] -= lowammo
+                        WEAPONS[self.weapon]['cur_ammo'] = self.ammo
                     else:
                         WEAPONS[self.weapon]['totalammo'] -= WEAPONS[self.weapon]['ammo'] - self.ammo
                         self.ammo += WEAPONS[self.weapon]['load']
+                        WEAPONS[self.weapon]['cur_ammo'] = self.ammo
                     if WEAPONS[self.weapon]['totalammo'] < 0:
                         WEAPONS[self.weapon]['totalammo'] = 0
                     if self.ammo >= WEAPONS[self.weapon]['ammo']:
                         self.ammo = WEAPONS[self.weapon]['ammo']
+                        WEAPONS[self.weapon]['cur_ammo'] = self.ammo
                 if self.weapon == 'rifle':
                     if WEAPONS[self.weapon]['totalammo'] < WEAPONS[self.weapon]['ammo'] - self.ammo:
                         lowammo = WEAPONS[self.weapon]['totalammo']
                         self.ammo += lowammo
                         WEAPONS[self.weapon]['totalammo'] -= WEAPONS[self.weapon]['ammo'] - self.ammo
+                        WEAPONS[self.weapon]['cur_ammo'] = self.ammo
                     elif WEAPONS[self.weapon]['totalammo'] == WEAPONS[self.weapon]['ammo'] - self.ammo:
                         lowammo = WEAPONS[self.weapon]['totalammo']
                         self.ammo += lowammo
                         WEAPONS[self.weapon]['totalammo'] -= lowammo
+                        WEAPONS[self.weapon]['cur_ammo'] = self.ammo
                     else:
                         WEAPONS[self.weapon]['totalammo'] -= WEAPONS[self.weapon]['ammo'] - self.ammo
                         self.ammo += WEAPONS[self.weapon]['load']
+                        WEAPONS[self.weapon]['cur_ammo'] = self.ammo
                     if WEAPONS[self.weapon]['totalammo'] < 0:
                         WEAPONS[self.weapon]['totalammo'] = 0
                     if self.ammo >= WEAPONS[self.weapon]['ammo']:
                         self.ammo = WEAPONS[self.weapon]['ammo']
+                        WEAPONS[self.weapon]['cur_ammo'] = self.ammo
                 if self.weapon == 'shotgun':
                     if WEAPONS[self.weapon]['totalammo'] > 0 and self.ammo < WEAPONS[self.weapon]['ammo']:
                         self.ammo += WEAPONS[self.weapon]['load']
                         WEAPONS[self.weapon]['totalammo'] -= WEAPONS[self.weapon]['load']
+                        WEAPONS[self.weapon]['cur_ammo'] = self.ammo
                     elif WEAPONS[self.weapon]['totalammo'] <= 0:
                         WEAPONS[self.weapon]['totalammo'] = 0
                     if self.ammo >= WEAPONS[self.weapon]['ammo']:
                         self.ammo = WEAPONS[self.weapon]['ammo']
+                        WEAPONS[self.weapon]['cur_ammo'] = self.ammo
 
     def add_health(self, amount):
         self.health += amount
@@ -211,6 +225,7 @@ class Player(pg.sprite.Sprite):
         if self.weapon == 'pistol':
             self.game.mouse.image_copy = self.game.crosshair_pistol
             self.weapon_name = 'Handgun'
+
             if self.standing:
                 if now - self.last_update > 50:
                     self.last_update = now
