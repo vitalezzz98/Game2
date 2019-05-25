@@ -2,7 +2,7 @@ To-Do list:
 
 1. Animation fixes (player shooting animation)   v
 2. New animations (reload animations)            v
-3. More guns 
+3. More guns                                     v
 4. Survivors
 5. Ammo system                                   v
 6. Score
