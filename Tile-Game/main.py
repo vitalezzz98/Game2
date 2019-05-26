@@ -330,7 +330,7 @@ class Game:
                 self.effects_sounds['health_up'].play()
                 WEAPONS['rifle']['totalammo'] += WEAPONS['rifle']['ammo']
         # zombie hit player
-        hits = pg.sprite.spritecollide(self.player, self.mobs, False, collide_hit_rect)
+        hits = pg.sprite.spritecollide(self.player, self.mobs, False, pg.sprite.collide_mask)
         for hit in hits:
             if random() < 0.7:
                 choice(self.player_hit_sounds).play()
@@ -342,7 +342,7 @@ class Game:
         if hits:
             self.player.pos += vec(MOB_KNOCKBACK, 0).rotate(-hits[0].rot)
         # bullet hits
-        hits = pg.sprite.groupcollide(self.mobs, self.bullets, False, True)
+        hits = pg.sprite.groupcollide(self.mobs, self.bullets, False, True, collide_hit_rect)
         for mob in hits:
             if random() < 0.5:
                 choice(self.zombie_hit_sounds).play()

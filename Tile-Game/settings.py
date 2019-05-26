@@ -89,6 +89,7 @@ WEAPONS['pistol'] = {'bullet_speed': 750,
                      'bullet_size': 'md',
                      'bullet_count': 1,
                      'ammo': 15,
+                     'cur_ammo': 15,
                      'totalammo': 90,
                      'load': 15,
                      'rel_time': 3000}
@@ -101,6 +102,7 @@ WEAPONS['shotgun'] = {'bullet_speed': 700,
                       'bullet_size': 'sm',
                       'bullet_count': 12,
                       'ammo': 7,
+                      'cur_ammo': 7,
                       'totalammo': 21,
                       'load': 1,
                       'rel_time': 700}
@@ -113,6 +115,7 @@ WEAPONS['rifle'] = {'bullet_speed': 700,
                     'bullet_size': 'lg',
                     'bullet_count': 1,
                     'ammo': 30,
+                    'cur_ammo': 30,
                     'totalammo': 150,
                     'load': 30,
                     'rel_time': 2000}
@@ -127,7 +130,7 @@ MOB_MOVE_IMG = ['zomb_move (1).png', 'zomb_move (2).png', 'zomb_move (3).png', '
 MOB_ATTACK_IMG = ['zomb_attack (1).png', 'zomb_attack (2).png', 'zomb_attack (3).png', 'zomb_attack (4).png', 'zomb_attack (5).png', 'zomb_attack (6).png',
                 'zomb_attack (7).png', 'zomb_attack (8).png', 'zomb_attack (9).png']
 MOB_SPEEDS = [200, 180, 160, 140, 120]
-MOB_HIT_RECT = pg.Rect(0, 0, 30, 30)
+MOB_HIT_RECT = pg.Rect(0, 0, 40, 40)
 MOB_HEALTH = 100
 MOB_DAMAGE = 10
 MOB_KNOCKBACK = 20
